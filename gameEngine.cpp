@@ -31,15 +31,6 @@ void gameStart(){
   arduboy.drawLine(0, 10, 130, 10, WHITE);
   arduboy.setCursor(0, 12);
 
-  if( arduboy.pressed(UP_BUTTON) == true and upbuff ==0){
-      upbuff = 1;
-      menuCase++;
-    }
-    
-    if( arduboy.pressed(DOWN_BUTTON) == true and downbuff ==0){
-      downbuff = 1;
-       menuCase--;
-    }
     
     if (menuCase > 2){ menuCase = 0;}
     if (menuCase < 0){ menuCase = 2;} 
@@ -86,25 +77,9 @@ void gameStart(){
       gameStatus = menu;
       break;
     }
-
-  if (arduboy.pressed(A_BUTTON) and abuff == 0){
-      abuff = 1;
-      player.pickClass(0);
-      gameStatus = menu; 
-   }
-
-
  
   }
-  if( arduboy.notPressed(A_BUTTON) == true ) {
-    abuff = 0;
-  }
-  if( arduboy.notPressed(UP_BUTTON) == true ) {
-    upbuff = 0;
-  }
-  if( arduboy.notPressed(DOWN_BUTTON) == true ) {
-    downbuff = 0;
-  }
+
 }
 
 
@@ -130,14 +105,7 @@ void MainMenu() {
   arduboy.print("MAIN MENU");
   arduboy.drawLine(0, 10, 130, 10, WHITE);
   arduboy.setCursor(0, 12);
-  if( arduboy.pressed(UP_BUTTON) == true and upbuff ==0){
-      upbuff = 1;
-      menuCase++;
-    }
-    if( arduboy.pressed(DOWN_BUTTON) == true and downbuff ==0){
-      downbuff = 1;
-       menuCase--;
-    }
+  
     if (menuCase > 3){ menuCase = 0;}
     if (menuCase < 0){menuCase = 3;} 
 
@@ -195,15 +163,7 @@ void MainMenu() {
     }
     }
 
- if( arduboy.notPressed(UP_BUTTON) == true ) {
-    upbuff = 0;
-  }
-  if( arduboy.notPressed(DOWN_BUTTON) == true ) {
-    downbuff = 0;
-  }
-  if( arduboy.notPressed(A_BUTTON) == true ) {
-    abuff = 0;
-  }
+
 }
 
 //INITIALIZE FIGHT ROOM 
@@ -251,14 +211,7 @@ void  StatMenu() {
     arduboy.drawLine(0, 10, 130, 10, WHITE);
     arduboy.setCursor(0, 12);
     arduboy.println("Select item to equipt");
-      if( arduboy.pressed(UP_BUTTON) == true and upbuff ==0){
-        upbuff = 1;
-        menuCase++;
-      }
-      if( arduboy.pressed(DOWN_BUTTON) == true and downbuff ==0){
-        downbuff = 1;
-        menuCase--;
-      }
+    
       if (menuCase > 4){ menuCase = 0;}
       if (menuCase < 0){menuCase = 4;} 
       arduboy.print(player.inventory[menuCase].name);
@@ -272,16 +225,6 @@ void  StatMenu() {
       if(arduboy.pressed(LEFT_BUTTON)) {
         equiptMenu =0;
       }
-      if( arduboy.notPressed(UP_BUTTON) == true ) {
-        upbuff = 0;
-      }
-      if( arduboy.notPressed(DOWN_BUTTON) == true ) {
-        downbuff = 0;
-      }
-      if( arduboy.notPressed(A_BUTTON) == true ) {
-      abuff = 0;
-      }
-  
   }
 }
 
@@ -321,10 +264,10 @@ void FailScreen(){
 
   if (arduboy.pressed(B_BUTTON)){
     
-    gameStatus = menu;
-    infight = false; 
-    player.hp = 0;
-    if(player.wallet <= 0){
+      gameStatus = menu;
+      infight = false; 
+      player.hp = 0;
+      if(player.wallet <= 0){
       player.wallet +=1;
     }
   }
@@ -373,14 +316,7 @@ void Store() {
   arduboy.setCursor(0, 12);
 
   //scroll menu
-  if( arduboy.pressed(UP_BUTTON) == true and upbuff ==0){
-      upbuff = 1;
-      menuCase++;
-    }
-    if( arduboy.pressed(DOWN_BUTTON) == true and downbuff ==0){
-      downbuff = 1;
-       menuCase--;
-    }
+
 
     if(arduboy.pressed(B_BUTTON)) {
     gameStatus = menu;
@@ -465,17 +401,6 @@ void Store() {
     }  
   }
     
-    
-
- if( arduboy.notPressed(UP_BUTTON) == true ) {
-    upbuff = 0;
-  }
-  if( arduboy.notPressed(DOWN_BUTTON) == true ) {
-    downbuff = 0;
-  }
-  if( arduboy.notPressed(A_BUTTON) == true ) {
-    abuff = 0;
-  }
       
 }
 
