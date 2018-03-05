@@ -58,9 +58,7 @@ void loop() {
      case GameStatus::store:
      Store();
      break;
-     case GameStatus::bossBattle:
-     bossFight();
-     break;
+     
   }  
   arduboy.display();
 }

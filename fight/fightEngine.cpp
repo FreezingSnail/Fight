@@ -15,22 +15,16 @@ int eMoveChoise;
 void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove){
 
       if(agesMove == attack){
-        if(trgtMove == defend){
-          target.takeDamage(agressor, (target.defense));
-        
-        
-        }else if( trgtMove == attack){
+        if(trgtMove == attack){
           target.takeDamage(agressor, 0);
+        
+        
+        }else if( trgtMove == defend){
+          target.takeDamage(agressor, (target.defense/5));
   
-        }
-        else{
-          target.takeDamage(agressor, 2);      
-        }
+         }      
       }
-      else if (agesMove == defend){}  
-      else if (agesMove == special){
-        target.takeSpecial(agressor);
-      }
+      else if (agesMove = defend){}  
 }
 
 void Engagement(actor& plyr, actor& cpu){
@@ -38,8 +32,16 @@ void Engagement(actor& plyr, actor& cpu){
 //recieve player input
   if(moveChoiseMade == 0){
     turnComplete = false;
-    if (menuCase > 2){ menuCase = 0;}
-    if (menuCase < 0){menuCase = 2;} 
+    if( arduboy.pressed(UP_BUTTON) == true and upbuff ==0){
+      upbuff = 1;
+      menuCase++;
+    }
+    if( arduboy.pressed(DOWN_BUTTON) == true and downbuff ==0){
+       downbuff = 1;
+       menuCase--;
+    }
+    if (menuCase > 1){ menuCase = 0;}
+    if (menuCase < 0){menuCase = 1;} 
 
     switch (menuCase) {
 
@@ -48,9 +50,6 @@ void Engagement(actor& plyr, actor& cpu){
       break;
       case 1:
       arduboy.print("defend");
-      break;
-      case 2:
-      arduboy.print("Special");
       break;
    
     }
@@ -68,17 +67,22 @@ void Engagement(actor& plyr, actor& cpu){
       playerMove = defend;
       moveChoiseMade = 1;
       break;
-      case 2:
-      playerMove = special;
-      moveChoiseMade = 1;
-      break;
     }
    }
 
+   if( arduboy.notPressed(A_BUTTON) == true ) {
+      abuff = 0;
+      }
+      if( arduboy.notPressed(UP_BUTTON) == true ) {
+      upbuff = 0;
+      }
+      if( arduboy.notPressed(DOWN_BUTTON) == true ) {
+      downbuff = 0;
+     }
 
 // get cpu move
 
-  int cpuAtkRand = rand() %3;
+  int cpuAtkRand = rand() %2;
 
   switch (cpuAtkRand) {
 
@@ -88,10 +92,6 @@ void Engagement(actor& plyr, actor& cpu){
       break;
       case 1:
       enemyMove = defend;
-      eMoveChoise = 1;
-      break;
-      case 2:
-      enemyMove = special;
       eMoveChoise = 1;
       break;
     }
