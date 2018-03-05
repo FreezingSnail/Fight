@@ -9,9 +9,10 @@ void Intro();
 void MainMenu();
 void fight();
 void StatMenu();
-void BattleScene();
+void BattleScene(actor& opponent);
 void VictoryScreen();
 void Store();
 void FailScreen();
+void bossFight();
 
 #endif gameEngine_h

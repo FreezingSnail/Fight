@@ -3,7 +3,7 @@
 
 
 
-actor::actor(char* nm, int h, int str, int def, int spd, int spc) {
+actor::actor(char* nm, int h, int str, int def, int spd, int spc, byte BMP, equpment Item) {
   
   name = nm;
   totalHP = h;
@@ -16,16 +16,20 @@ actor::actor(char* nm, int h, int str, int def, int spd, int spc) {
   weapon;
   wallet = 0;
   inventory[5];
+  level = 0;
 
   for (int x; x<5; x++){
-    inventory[x] = {0, 0, "EMPTY"};
+    inventory[x] = {0, 0, 0, "EMPTY"};
   } 
 }
   
  
 actor::printStats() {
+
+    if (menuCase > 1){ menuCase = 0;}
+    if (menuCase < 0){menuCase = 1;} 
     
-    if( menuNum == 0){
+    if( menuCase == 0){
     
       arduboy.setCursor(0, 12);
       arduboy.println(name);
@@ -34,55 +38,36 @@ actor::printStats() {
       arduboy.print(totalHP);
       arduboy.println(" HP ");
       arduboy.print("Strength:");
-      arduboy.println(strength);
+      arduboy.println(strength + weapon.atkMod);
       arduboy.print("Defense:");
-      arduboy.println(defense);
+      arduboy.println(defense + weapon.defMod);
       arduboy.print("Speed:");
       arduboy.println(speed);
       arduboy.print("Magic:");
-      arduboy.println(special);
+      arduboy.println(special + weapon.spcMod);
       arduboy.setCursor(75, 12);
-      arduboy.println(weapon.name);
+      arduboy.print("Lvl:");
+      arduboy.print(level);
       arduboy.setCursor(75, 20);
-      arduboy.print("str:");
-      arduboy.print(weapon.atkMod);
-      arduboy.setCursor(75, 30);
-      arduboy.print("def:");
-      arduboy.print(weapon.defMod);
-      arduboy.setCursor(50, 52);
+      arduboy.println(weapon.name);
+      arduboy.setCursor(75, 28);
       arduboy.print("Coins:");
       arduboy.print(wallet);
       arduboy.drawBitmap(100, 40, bmp, 20, 20, WHITE);
       
     
-      if(arduboy.pressed(DOWN_BUTTON)) {
-        menuNum = 1;
-      }
-      
-      if( arduboy.notPressed(DOWN_BUTTON) == true ) {
-        downbuff = 0;
-      }
-    
-    }else if (menuNum == 1){
+    }else if (menuCase == 1){
       arduboy.clear();
       arduboy.setCursor(0, 0);
       arduboy.print("INVENTORY ^STATS");
       arduboy.drawLine(0, 10, 130, 10, WHITE);
       arduboy.setCursor(0, 12);
       printInv();
-
-      if(arduboy.pressed(UP_BUTTON)){
-        menuNum = 0;
-      }
-     
-      if( arduboy.notPressed(UP_BUTTON) == true ) {
-        upbuff = 0;
-      }
     }
 }
 
 actor::equipt(int inventoryLocation){
-  weapon = {inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].name};
+  weapon = {inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name};
 }
 
 
@@ -99,7 +84,7 @@ actor::pickClass(int type){
       speed = 5;
       special = 0;
       bmp = warrior_bmp;
-      inventory[0] = {1, 0, "sword"};
+      inventory[0] = {1, 0, 0, "Sword"};
       weapon = inventory[0];
       break;
 
@@ -112,7 +97,7 @@ actor::pickClass(int type){
       speed = 0;
       special = 5;
       bmp = tank_bmp;
-      inventory[0] = {0, 1, "Sheild"};
+      inventory[0] = {0, 1, 0, "Sheild"};
       weapon = inventory[0];
       break;
 
@@ -125,14 +110,14 @@ actor::pickClass(int type){
       speed = 10;
       special = 10;
       bmp = mage_bmp;
-      inventory[0] = {1, 0, "Staff"};
+      inventory[0] = {0, 0, 1, "Staff"};
       weapon = inventory[0];
       break;
     }
  }
  
 actor::damage(){
-    return (strength / 2);
+    return (strength / 3);
 }
 
 actor::takeDamage(actor attacker, int modifier){
@@ -148,8 +133,36 @@ actor::takeDamage(actor attacker, int modifier){
 
 actor::printInv(){
      for( int x = 0; x < 5 ; x++){
-        arduboy.println(inventory[x].name);
+        arduboy.print(inventory[x].name);
+        arduboy.print(" a:");
+        arduboy.print(inventory[x].atkMod);
+        arduboy.print(" d:");
+        arduboy.print(inventory[x].defMod);
+        arduboy.print(" s:");
+        arduboy.println(inventory[x].spcMod);
      }
+}
+
+actor::takeSpecial(actor attacker){
+  
+  int damageval = ((attacker.special/2)+weapon.spcMod);
+      if (damageval > 0){
+        hp -= damageval;
+      }
+      else{
+      }
+}
+
+actor::levelUp(){
+  level++;
+  totalHP += 5;
+  hp = totalHP;
+  strength += (strength/3) +1;
+  defense += (defense/3) +1;
+  speed += (speed/3) +1;
+  special += (special/3) +1;
+  
+  
 }
 
 //warrior::warrior{

@@ -17,6 +17,7 @@ enum GameStatus {
   gameOver,
   statScreen,
   store,
+  bossBattle,
 };
 
 extern GameStatus gameStatus;
@@ -25,6 +26,7 @@ extern int menuCase;
 enum moveType {
   attack,
   defend,
+  special,
 };
 
 extern moveType playerMove;
