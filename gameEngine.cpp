@@ -10,9 +10,9 @@
 actor player = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
 actor enemy = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
 //actor boss = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
- actor slime = actor("slime", 25, 8, 8, 6, 8, warrior_bmp, {3, 0, 3, "slime ball", 0}); 
- actor troll = actor("troll", 30, 20, 6, 2, 4, warrior_bmp, {4, 2, 0, "Club", 0}); 
- actor ogre = actor("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0}); 
+// actor slime = actor("slime", 25, 8, 8, 6, 8, warrior_bmp, {3, 0, 3, "slime ball", 0}); 
+ //actor troll = actor("troll", 30, 20, 6, 2, 4, warrior_bmp, {4, 2, 0, "Club", 0}); 
+ //actor ogre = actor("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0}); 
 
 //STORE INVENTORY ARRAY
 const equpment storeInventory[] = {{5, 2, 0, "Kleaver", 10}, {2, 5, 0, "Broad Shield", 10}, {0, 2, 5, "Wand", 10}, {7, 5, 3, "Katana", 20}, {5, 7, 3, "Iron Sheild", 20}, {3, 5, 7, "Mangus Staff", 20}}; 
@@ -94,7 +94,7 @@ void gameStart(){
 //INTRO SCREEN
 void  Intro(){
   arduboy.clear();
-  //arduboy.drawBitmap(0, 0, splashScreen, 128, 64, WHITE);
+  arduboy.drawBitmap(0, 0, splashScreen, 128, 64, WHITE);
   //ADD GAME SPLASH SCREEN
   arduboy.setCursor(25, 0);
   arduboy.print("Hit b to start");
@@ -201,14 +201,17 @@ void bossFight(){
       menuCase = 0;
       inbossfight = 1;
     }
-    if(arenaLvl == 0);{
-      BattleScene(slime);
+    if(arenaLvl == 0){
+      enemy = actor("slime", 25, 8, 8, 6, 8, slime_bmp, {3, 0, 3, "slime ball", 0});
+      BattleScene(enemy);;
     }
     if (arenaLvl == 1){
-      BattleScene(troll);
+      enemy = actor("troll", 30, 20, 6, 2, 4, troll_bmp, {4, 2, 0, "Club", 0});
+      BattleScene(enemy);
     }
     if (arenaLvl == 2){
-      BattleScene(ogre);
+      enemy = actor("ogre", 40, 20, 15, 4, 8, ogre_bmp, {6, 0, 0, "Ogre Claws", 0});
+      BattleScene(enemy);
     }
 }
 
@@ -310,9 +313,7 @@ void FailScreen(){
       player.wallet -= 2;
       if(inbossfight == 1){
         inbossfight = 0;
-        slime.hp = slime.totalHP;
-        troll.hp = troll.totalHP;
-        ogre.hp = ogre.totalHP;
+        
      
      if(player.wallet >= 2){
       player.wallet -= 2;}
