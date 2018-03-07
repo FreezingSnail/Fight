@@ -1,3 +1,6 @@
+//2205
+//2201
+
 #include "gameEngine.h"
 #include "Globals.h"
 #include "actor.h"
@@ -134,8 +137,13 @@ void MainMenu() {
       case 2:
       arduboy.print("quit");
       break;
-       case 3:
-      arduboy.print("Fight Arena Boss");
+      case 3:
+      if(arenaLvl < 3){
+        arduboy.print("Fight Arena Boss");
+      }
+      else{
+        arduboy.print("you are the arena champion");
+      }
       break;
       case 4:
       arduboy.print("store");
@@ -143,8 +151,7 @@ void MainMenu() {
     }
 
 
-   if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
-      abuff = 1;
+   if( arduboy.pressed(A_BUTTON) == true){
       switch (menuCase) {
 
       case 0:
@@ -161,7 +168,7 @@ void MainMenu() {
       setup();
       break;
       case 3:
-      if( player.hp > 0){
+      if( player.hp > 0 && arenaLvl < 3){
         gameStatus = bossBattle;
       }
       break;
@@ -200,19 +207,20 @@ void bossFight(){
       infight = true;
       menuCase = 0;
       inbossfight = 1;
+      if(arenaLvl == 0){
+         enemy = actor("slime", 25, 8, 8, 6, 8, warrior_bmp, {3, 0, 3, "slime ball", 0});  
+         enemy.bmp = slime_bmp;
+      }
+      if(arenaLvl == 1){
+         enemy = actor("troll", 30, 20, 6, 2, 4, troll_bmp, {4, 2, 0, "Club", 0});
+         enemy.bmp = troll_bmp;
+      }
+      if (arenaLvl == 2){
+        enemy = actor("ogre", 40, 20, 15, 4, 8, ogre_bmp, {6, 0, 0, "Ogre Claws", 0});
+        enemy.bmp = ogre_bmp;
+      }
     }
-    if(arenaLvl == 0){
-      enemy = actor("slime", 25, 8, 8, 6, 8, slime_bmp, {3, 0, 3, "slime ball", 0});
-      BattleScene(enemy);;
-    }
-    if (arenaLvl == 1){
-      enemy = actor("troll", 30, 20, 6, 2, 4, troll_bmp, {4, 2, 0, "Club", 0});
-      BattleScene(enemy);
-    }
-    if (arenaLvl == 2){
-      enemy = actor("ogre", 40, 20, 15, 4, 8, ogre_bmp, {6, 0, 0, "Ogre Claws", 0});
-      BattleScene(enemy);
-    }
+     BattleScene(enemy);
 }
 
 
@@ -249,7 +257,7 @@ void  StatMenu() {
       if (menuCase < 0){menuCase = 4;} 
       arduboy.print(player.inventory[menuCase].name);
       
-      if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
+      if( arduboy.justPressed(A_BUTTON) == true){
           player.equipt(menuCase);
           equiptMenu = 0;
 
@@ -339,8 +347,12 @@ void BattleScene(actor& opponent) {
     arduboy.drawLine(58, 62, 120, 62, WHITE);
 
     arduboy.drawBitmap(85, 0, enemy.bmp, 20, 20, WHITE);
-    arduboy.drawBitmap(8, 29, player.bmp, 20, 20, WHITE);
-    arduboy.setCursor(0, 50);
+    arduboy.drawBitmap(8, 25, player.bmp, 20, 20, WHITE);
+    arduboy.drawLine(2, 48, 48, 48, WHITE);
+    arduboy.drawLine(2, 58, 48, 58, WHITE);
+    arduboy.drawLine(2, 48, 2, 58, WHITE);
+    arduboy.drawLine(48, 48, 48, 58, WHITE);
+    arduboy.setCursor(5, 50);
     Engagement(player, opponent);
 
  
@@ -390,8 +402,8 @@ void Store() {
    
     }
 
-     if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
-      abuff = 1;
+     if( arduboy.justPressed(A_BUTTON) == true){
+
       switch (menuCase) {
        case 0:
       menuNum = 1;
@@ -441,11 +453,10 @@ void Store() {
     arduboy.print(" ");
     arduboy.println(player.inventory[menuCase].name);
     
-    if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
+    if( arduboy.justPressed(A_BUTTON) == true){
       player.inventory[menuCase] = storeInventory[itemSelected];
       player.wallet -= storeInventory[itemSelected].cost;
       menuNum = 0;
-      abuff = 1;
     }  
   }
     

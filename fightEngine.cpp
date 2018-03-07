@@ -56,8 +56,7 @@ void Engagement(actor& plyr, actor& cpu){
     }
 
 
-   if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
-      abuff = 1;
+   if( arduboy.justPressed(A_BUTTON) == true){
       switch (menuCase) {
 
       case 0:
@@ -112,7 +111,6 @@ void Engagement(actor& plyr, actor& cpu){
     //IMPLEMENT A PAUSE THAT READS ENEMY MOVE SELECTION
       if (arduboy.everyXFrames(60)){
       arduboy.print(enemyMove);}
-      abuff = 1;
       turnComplete = true;
       moveChoiseMade = 0;
 
@@ -121,7 +119,6 @@ void Engagement(actor& plyr, actor& cpu){
 
       engage(cpu, plyr, enemyMove, playerMove); 
       engage(plyr, cpu, playerMove, enemyMove);
-      abuff = 1;
       turnComplete = true;
       moveChoiseMade = 0;
     }

@@ -3,9 +3,6 @@
 #include <Arduboy2.h>
 
 extern Arduboy2 arduboy;
-extern int upbuff;
-extern int downbuff;
-extern int abuff;
 extern int turnState;
 extern int menuNum;
 

@@ -20,24 +20,13 @@ void loop() {
   }
   arduboy.pollButtons();
 
-  if( arduboy.pressed(UP_BUTTON) == true and upbuff ==0){
-      upbuff = 1;
+  if( arduboy.justPressed(UP_BUTTON) == true){
       menuCase++;
     }
-    if( arduboy.pressed(DOWN_BUTTON) == true and downbuff ==0){
-      downbuff = 1;
+    if( arduboy.justPressed(DOWN_BUTTON) == true){
        menuCase--;
     }
 
-     if( arduboy.notPressed(UP_BUTTON) == true ) {
-    upbuff = 0;
-  }
-  if( arduboy.notPressed(DOWN_BUTTON) == true ) {
-    downbuff = 0;
-  }
-  if( arduboy.notPressed(A_BUTTON) == true ) {
-    abuff = 0;
-  }
 
   switch (gameStatus) {
      case GameStatus::intro:
