@@ -4,10 +4,10 @@
 
 
 
-int moveChoiseMade;
+uint16_t moveChoiseMade;
 bool playerFirst;
 bool turnComplete;
-int eMoveChoise;
+uint16_t eMoveChoise;
 
 
 //take in 2 entities
@@ -16,7 +16,7 @@ void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove
 
       if(agesMove == attack){
         if(trgtMove == defend){
-          target.takeDamage(agressor, (target.defense));
+          target.takeDamage(agressor, (target.getStat(target.statSeed.defense)));
         
         
         }else if( trgtMove == attack){
@@ -56,7 +56,8 @@ void Engagement(actor& plyr, actor& cpu){
     }
 
 
-   if( arduboy.justPressed(A_BUTTON) == true){
+   if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
+      abuff = 1;
       switch (menuCase) {
 
       case 0:
@@ -77,7 +78,7 @@ void Engagement(actor& plyr, actor& cpu){
 
 // get cpu move
 
-  int cpuAtkRand = rand() %3;
+  uint16_t cpuAtkRand = rand() %3;
 
   switch (cpuAtkRand) {
 
@@ -97,7 +98,7 @@ void Engagement(actor& plyr, actor& cpu){
   }
   else if (moveChoiseMade == 1 && eMoveChoise == 1){
   //determine which moves first
-    if(plyr.speed > cpu.speed) {
+    if(plyr.getStat(plyr.statSeed.speed) > cpu.getStat(cpu.statSeed.speed)) {
     playerFirst = true;
     }
     else{ playerFirst = false;}
@@ -111,6 +112,7 @@ void Engagement(actor& plyr, actor& cpu){
     //IMPLEMENT A PAUSE THAT READS ENEMY MOVE SELECTION
       if (arduboy.everyXFrames(60)){
       arduboy.print(enemyMove);}
+      abuff = 1;
       turnComplete = true;
       moveChoiseMade = 0;
 
@@ -119,6 +121,7 @@ void Engagement(actor& plyr, actor& cpu){
 
       engage(cpu, plyr, enemyMove, playerMove); 
       engage(plyr, cpu, playerMove, enemyMove);
+      abuff = 1;
       turnComplete = true;
       moveChoiseMade = 0;
     }

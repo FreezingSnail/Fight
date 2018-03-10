@@ -4,47 +4,50 @@
 #include "Globals.h"
 
 struct equpment {
-  int atkMod;
-  int defMod;
-  int spcMod;
+  uint16_t atkMod;
+  uint16_t defMod;
+  uint16_t spcMod;
   char* name;
-  int cost;
+  uint16_t cost;
+};
+
+struct baseStats {
+  
+  uint16_t totalHP;
+  uint16_t strength;
+  uint16_t defense;
+  uint16_t speed;
+  uint16_t special;
+  
 };
 
 
 class actor {
   
   public:
-
   char* name;
   int hp;
-  int totalHP;
-  int strength;
-  int defense;
-  int speed;
-  int special;
   byte* bmp;
-  int wallet;
-  int level;
+  uint16_t level;
   equpment weapon;
-  equpment inventory[5];
+  baseStats statSeed;
 
-   actor(char* nm, int h, int str, int def, int spd, int spc, byte BMP, equpment Item);
-  // pickClass(int type);
+
+   explicit actor(char* nm, byte BMP, equpment Item);
+  // pickClass(uint16_t type);
    
-   printStats();
-   getHP(); 
-   pickClass(int x);
+
+   pickClass(uint16_t x);
    damage();
-   takeDamage(actor attacker, int x);
-   equipt(int inventoryLocation);
+   takeDamage(actor attacker, uint16_t x);
    takeSpecial(actor attacker);
-   printInv();
    levelUp();
+   getStat (uint16_t stat);
+
 
 };
 
-//class warrior: public actor {
+  //class warrior: public actor {
   //public:
   //equpment weapon;
   

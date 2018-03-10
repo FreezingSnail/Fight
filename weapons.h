@@ -1,7 +1,7 @@
 struct weapon {
-  int atkMod,
-  int defMod,
+  uint16_t atkMod,
+  uint16_t defMod,
   char* name,
-  int cost;
+  uint16_t cost;
 };
 

@@ -27,6 +27,9 @@ void loop() {
        menuCase--;
     }
 
+  if( arduboy.notPressed(A_BUTTON) == true ) {
+    abuff = 0;
+  }
 
   switch (gameStatus) {
      case GameStatus::intro:

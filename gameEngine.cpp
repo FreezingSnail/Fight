@@ -1,40 +1,38 @@
-//2205
-//2201
-
 #include "gameEngine.h"
 #include "Globals.h"
 #include "actor.h"
 #include "fightEngine.h"
 #include "images.h"
 #include "bossActors.h"
+#include "player.h"
 
 //INITIALIZE ACTORS
 //actor(char* nm, int h, int str, int def, int spd, int spc, byte BMP, equpment Item);
-actor player = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
-actor enemy = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
+playerCharacter player = playerCharacter("null", warrior_bmp, {0, 0, 0, "null", 0});
+actor enemy = actor("null",  warrior_bmp, {0, 0, 0, "null", 0});
 //actor boss = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
 // actor slime = actor("slime", 25, 8, 8, 6, 8, warrior_bmp, {3, 0, 3, "slime ball", 0}); 
  //actor troll = actor("troll", 30, 20, 6, 2, 4, warrior_bmp, {4, 2, 0, "Club", 0}); 
  //actor ogre = actor("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0}); 
+//playerCharacter test = playerCharacter("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0});
 
-//STORE INVENTORY ARRAY
+//STORE INVENTORY ARRA
 const equpment storeInventory[] = {{5, 2, 0, "Kleaver", 10}, {2, 5, 0, "Broad Shield", 10}, {0, 2, 5, "Wand", 10}, {7, 5, 3, "Katana", 20}, {5, 7, 3, "Iron Sheild", 20}, {3, 5, 7, "Mangus Staff", 20}}; 
 
 
 
 //OTHER INTS FOR MENU LOCATIONS
-int upbuff = 0;
-int downbuff = 0;
-int abuff = 0;
-int equiptMenu = 0;
+
+uint16_t abuff = 0;
+uint16_t equiptMenu = 0;
 bool infight = false;
-int itemSelected;
-int arenaLvl = 0;
-int inbossfight =  0;
+uint16_t itemSelected;
+uint16_t arenaLvl = 0;
+uint16_t inbossfight =  0;
 
 //CHARACTER SELECTION
 void gameStart(){
-  player = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
+  player = playerCharacter("null", warrior_bmp, {0, 0, 0, "null", 0});
   arduboy.clear();
   arduboy.setCursor(0, 0);
   arduboy.print("Pick your class.");
@@ -139,10 +137,9 @@ void MainMenu() {
       break;
       case 3:
       if(arenaLvl < 3){
-        arduboy.print("Fight Arena Boss");
-      }
+       arduboy.print("Fight Arena Boss");     }
       else{
-        arduboy.print("you are the arena champion");
+       arduboy.print("you are the arena champion");
       }
       break;
       case 4:
@@ -151,7 +148,8 @@ void MainMenu() {
     }
 
 
-   if( arduboy.pressed(A_BUTTON) == true){
+   if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
+      abuff = 1;
       switch (menuCase) {
 
       case 0:
@@ -168,7 +166,7 @@ void MainMenu() {
       setup();
       break;
       case 3:
-      if( player.hp > 0 && arenaLvl < 3){
+      if( player.hp > 0  && arenaLvl < 3){
         gameStatus = bossBattle;
       }
       break;
@@ -207,20 +205,20 @@ void bossFight(){
       infight = true;
       menuCase = 0;
       inbossfight = 1;
-      if(arenaLvl == 0){
-         enemy = actor("slime", 25, 8, 8, 6, 8, warrior_bmp, {3, 0, 3, "slime ball", 0});  
-         enemy.bmp = slime_bmp;
-      }
-      if(arenaLvl == 1){
-         enemy = actor("troll", 30, 20, 6, 2, 4, troll_bmp, {4, 2, 0, "Club", 0});
-         enemy.bmp = troll_bmp;
-      }
-      if (arenaLvl == 2){
-        enemy = actor("ogre", 40, 20, 15, 4, 8, ogre_bmp, {6, 0, 0, "Ogre Claws", 0});
-        enemy.bmp = ogre_bmp;
-      }
     }
-     BattleScene(enemy);
+    if(arenaLvl == 0){
+    //  enemy = actor("slime", 25, 8, 8, 8, slime_bmp, {3, 0, 3, "slime ball", 0});
+      enemy.bmp = slime_bmp;
+    }
+    else if (arenaLvl == 1){
+    //  enemy = actor("troll", 30, 20, 6, 4, troll_bmp, {4, 2, 0, "Club", 0});
+      enemy.bmp = troll_bmp;
+    }
+    else if (arenaLvl == 2){
+//      enemy = actor("ogre", 40, 20, 15, 8, ogre_bmp, {6, 0, 0, "Ogre Claws", 0});
+      enemy.bmp = ogre_bmp;
+    }
+    BattleScene(enemy);
 }
 
 
@@ -257,7 +255,7 @@ void  StatMenu() {
       if (menuCase < 0){menuCase = 4;} 
       arduboy.print(player.inventory[menuCase].name);
       
-      if( arduboy.justPressed(A_BUTTON) == true){
+      if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
           player.equipt(menuCase);
           equiptMenu = 0;
 
@@ -317,7 +315,7 @@ void FailScreen(){
     
       gameStatus = menu;
       infight = false; 
-      player.hp = player.totalHP;
+      player.hp = player.getStat(player.statSeed.totalHP);
       player.wallet -= 2;
       if(inbossfight == 1){
         inbossfight = 0;
@@ -342,11 +340,14 @@ void BattleScene(actor& opponent) {
     arduboy.setCursor(60, 52);
     arduboy.print(player.hp);
     arduboy.print(" / ");
-    arduboy.print(player.totalHP);
+    arduboy.print(player.getStat(player.statSeed.totalHP));
     arduboy.print(" HP");
     arduboy.drawLine(58, 62, 120, 62, WHITE);
 
     arduboy.drawBitmap(85, 0, enemy.bmp, 20, 20, WHITE);
+    arduboy.drawBitmap(8, 29, player.bmp, 20, 20, WHITE);
+    arduboy.setCursor(0, 50);
+
     arduboy.drawBitmap(8, 25, player.bmp, 20, 20, WHITE);
     arduboy.drawLine(2, 48, 48, 48, WHITE);
     arduboy.drawLine(2, 58, 48, 58, WHITE);
@@ -393,7 +394,7 @@ void Store() {
       arduboy.print("Buy new equiptment");
       break;
       case 1:
-      if (player.hp < player.totalHP){
+      if (player.hp < player.getStat(player.statSeed.totalHP)){
       arduboy.print("HEAL: 1 coin");
       }else{
         arduboy.print("You need not heal");
@@ -402,15 +403,15 @@ void Store() {
    
     }
 
-     if( arduboy.justPressed(A_BUTTON) == true){
-
+     if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
+      abuff = 1;
       switch (menuCase) {
        case 0:
       menuNum = 1;
       break;
       case 1:
-      if(player.wallet > 0 && player.hp < player.totalHP){
-      player.hp = player.totalHP;
+      if(player.wallet > 0 && player.hp < player.getStat(player.statSeed.totalHP)){
+      player.hp = player.getStat(player.statSeed.totalHP);
       player.wallet -=1;
       }
       break;
@@ -453,10 +454,11 @@ void Store() {
     arduboy.print(" ");
     arduboy.println(player.inventory[menuCase].name);
     
-    if( arduboy.justPressed(A_BUTTON) == true){
+    if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
       player.inventory[menuCase] = storeInventory[itemSelected];
       player.wallet -= storeInventory[itemSelected].cost;
       menuNum = 0;
+      abuff = 1;
     }  
   }
     
