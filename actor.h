@@ -7,7 +7,7 @@ struct equpment {
   uint16_t atkMod;
   uint16_t defMod;
   uint16_t spcMod;
-  char* name;
+  const char* name;
   uint16_t cost;
 };
 
@@ -25,7 +25,7 @@ struct baseStats {
 class actor {
   
   public:
-  char* name;
+  const char* name;
   int hp;
   byte* bmp;
   uint16_t level;
@@ -33,11 +33,9 @@ class actor {
   baseStats statSeed;
 
 
-   explicit actor(char* nm, byte BMP, equpment Item);
+   explicit actor();
   // pickClass(uint16_t type);
    
-
-   pickClass(uint16_t x);
    damage();
    takeDamage(actor attacker, uint16_t x);
    takeSpecial(actor attacker);

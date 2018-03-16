@@ -10,6 +10,7 @@ bool turnComplete;
 uint16_t eMoveChoise;
 
 
+
 //take in 2 entities
 
 void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove){
@@ -17,24 +18,28 @@ void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove
       if(agesMove == attack){
         if(trgtMove == defend){
           target.takeDamage(agressor, (target.getStat(target.statSeed.defense)));
-        
+          
         
         }else if( trgtMove == attack){
           target.takeDamage(agressor, 0);
-  
+          
         }
         else{
-          target.takeDamage(agressor, 2);      
+          target.takeDamage(agressor, 2); 
+              
         }
       }
-      else if (agesMove == defend){}  
+      else if (agesMove == defend){state = 1;}  
       else if (agesMove == special){
         target.takeSpecial(agressor);
+        
       }
+        
+      
 }
 
 void Engagement(actor& plyr, actor& cpu){
-
+if(state == 0){
 //recieve player input
   if(moveChoiseMade == 0){
     turnComplete = false;
@@ -44,19 +49,19 @@ void Engagement(actor& plyr, actor& cpu){
     switch (menuCase) {
 
       case 0:
-      arduboy.print("attack");
+      arduboy.print(F("attack"));
       break;
       case 1:
-      arduboy.print("defend");
+      arduboy.print(F("defend"));
       break;
       case 2:
-      arduboy.print("Special");
+      arduboy.print(F("Special"));
       break;
    
     }
 
 
-   if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
+   if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
       abuff = 1;
       switch (menuCase) {
 
@@ -110,11 +115,12 @@ void Engagement(actor& plyr, actor& cpu){
       engage(cpu, plyr, enemyMove, playerMove);
 
     //IMPLEMENT A PAUSE THAT READS ENEMY MOVE SELECTION
-      if (arduboy.everyXFrames(60)){
-      arduboy.print(enemyMove);}
+      //if (arduboy.everyXFrames(60)){
+     // arduboy.print(enemyMove);}
       abuff = 1;
       turnComplete = true;
       moveChoiseMade = 0;
+      state=1;
 
     }
     else if (playerFirst == false && turnComplete == false) {
@@ -124,10 +130,47 @@ void Engagement(actor& plyr, actor& cpu){
       abuff = 1;
       turnComplete = true;
       moveChoiseMade = 0;
+      state =1;
     }
 //loop
 
   }
 }
+
+else if(state == 1){
+  arduboy.clear();
+  drawFightBoarder();
+  drawPlayerInfo();
+  arduboy.setCursor(70, 50);
+  arduboy.print(F("continue"));
+  arduboy.setCursor(6,4);
+   if(enemyMove == defend){
+         arduboy.println(F("The mob"));
+         arduboy.setCursor(6,14);
+         arduboy.println(F("Defended"));
+          
+        
+        }else if( enemyMove == attack){
+          arduboy.println(F("The mob"));
+          arduboy.setCursor(6,14);
+          arduboy.println(F("attacked"));
+          
+        }
+        else{
+          arduboy.println(F("The mob"));
+          arduboy.setCursor(6,14);
+          arduboy.println(F("used ")); 
+          arduboy.setCursor(6,24);
+          arduboy.println(F("magic")); 
+
+              
+        }
+  if(arduboy.justPressed(A_BUTTON) and abuff ==0){
+    abuff = 1;
+    state = 0;}
+  
+}
+}
+
 
 

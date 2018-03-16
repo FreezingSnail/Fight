@@ -5,7 +5,7 @@
 class playerCharacter: public actor{
   
 public:
-  playerCharacter(char* nm, byte BMP, equpment Item);
+  playerCharacter();
   int wallet;
   equpment weapon;
   equpment inventory[5];
@@ -13,6 +13,7 @@ public:
    printInv();
    printStats();
    equipt(uint16_t inventoryLocation);
+   pickClass(uint16_t x);
   
 };
 

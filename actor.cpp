@@ -1,54 +1,20 @@
 #include "actor.h"
 #include "images.h"
+#include "names.h"
 
 
-actor::actor(char* nm, byte BMP, equpment Item) {
+actor::actor() {
   
-  name = nm;
+  name;
   hp;
   bmp;
-  weapon;
+  equpment weapon;
   level = 1;
   baseStats statSeed;
 }
   
  
 
-
-
-
-actor::pickClass(uint16_t type){
- 
-    switch(type){
-      case 0:
-      statSeed = {10, 10, 5, 5, 1};
-      name = "warrior";
-      hp = getStat(statSeed.totalHP);
-      bmp = warrior_bmp;
-      //inventory[0] = {1, 0, 0, "Sword"};
-      weapon = {1, 0, 0, "Sword"};
-     
-      break;
-
-      case 1:
-      name = "Tank";
-      //inventory[0] = {0, 1, 0, "Sheild"};
-      weapon = {0, 1, 0, "Sheild"};
-      bmp = tank_bmp; 
-      statSeed = {20, 5, 5, 10, 1};
-      hp = getStat(statSeed.totalHP);
-      break;
-
-      case 2:
-      name = "mage";
-      bmp = mage_bmp;
-      //inventory[0] = {0, 0, 1, "Staff"};
-      weapon = {0, 0, 1, "Staff"};
-      statSeed = {10, 1, 1, 10, 10};
-      hp = getStat(statSeed.totalHP);
-      break;
-    }
- }
  
 actor::damage(){
     return (getStat(statSeed.strength) / 3);

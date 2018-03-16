@@ -6,6 +6,7 @@ extern Arduboy2 arduboy;
 extern uint16_t abuff;
 extern uint16_t turnState;
 extern uint16_t menuNum;
+extern uint16_t state;
 
 enum GameStatus {
   intro,
