@@ -5,5 +5,6 @@ GameStatus gameStatus;
 int menuCase;
 moveType playerMove;
 moveType enemyMove;
-int turnState;
-int menuNum;
+uint16_t turnState;
+uint16_t menuNum;
+uint16_t state = 0;

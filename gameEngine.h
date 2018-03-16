@@ -2,6 +2,7 @@
 #define gameEngine_h
 
 #include "actor.h"
+#include "enemy.h"
 
 
 void gameStart();
@@ -14,5 +15,9 @@ void VictoryScreen();
 void Store();
 void FailScreen();
 void bossFight();
+void generateMob();
+void drawBoarder();
+void drawPlayerInfo();
+void drawFightBoarder();
 
 #endif gameEngine_h

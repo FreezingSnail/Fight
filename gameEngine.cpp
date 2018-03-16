@@ -4,38 +4,39 @@
 #include "fightEngine.h"
 #include "images.h"
 #include "bossActors.h"
+#include "player.h"
+#include "enemy.h"
 
 //INITIALIZE ACTORS
 //actor(char* nm, int h, int str, int def, int spd, int spc, byte BMP, equpment Item);
-actor player = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
-actor enemy = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
+playerCharacter player = playerCharacter();
+actor mob = actor();
 //actor boss = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
-// actor slime = actor("slime", 25, 8, 8, 6, 8, warrior_bmp, {3, 0, 3, "slime ball", 0}); 
+//enemy slime = enemy("slime", {3, 0, 3, "slime ball"}, {25, 8, 8, 6, 8}, slime_bmp); 
  //actor troll = actor("troll", 30, 20, 6, 2, 4, warrior_bmp, {4, 2, 0, "Club", 0}); 
  //actor ogre = actor("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0}); 
+//playerCharacter test = playerCharacter("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0});
 
-//STORE INVENTORY ARRAY
-const equpment storeInventory[] = {{5, 2, 0, "Kleaver", 10}, {2, 5, 0, "Broad Shield", 10}, {0, 2, 5, "Wand", 10}, {7, 5, 3, "Katana", 20}, {5, 7, 3, "Iron Sheild", 20}, {3, 5, 7, "Mangus Staff", 20}}; 
-
-
+//STORE INVENTORY ARRA
+const equpment storeInventory[] = {{5, 2, 0, "Kleaver", 10}, {2, 5, 0, "Broad Shield", 10}, {0, 2, 5, "Wand", 10}, {7, 5, 3, "Katana", 20}, {5, 7, 3, "Iron Sheild", 20}, {3, 5, 7, "Mangus Rod", 20}}; 
 
 //OTHER INTS FOR MENU LOCATIONS
-int upbuff = 0;
-int downbuff = 0;
-int abuff = 0;
-int equiptMenu = 0;
+
+uint16_t abuff = 0;
+uint16_t equiptMenu = 0;
 bool infight = false;
-int itemSelected;
-int arenaLvl = 0;
-int inbossfight =  0;
+uint16_t itemSelected;
+uint16_t arenaLvl = 0;      
+uint16_t inbossfight =  0;
+int mobHP;
 
 //CHARACTER SELECTION
 void gameStart(){
-  player = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
+  player = playerCharacter();
   arduboy.clear();
   arduboy.setCursor(0, 0);
-  arduboy.print("Pick your class.");
-  arduboy.print("\n");
+  arduboy.print(F("Pick your class."));
+  arduboy.print(F("\n"));
   arduboy.drawLine(0, 10, 130, 10, WHITE);
   arduboy.setCursor(0, 12);
 
@@ -46,20 +47,20 @@ void gameStart(){
     switch (menuCase) {
 
       case 0:
-      arduboy.println("Warrior");
+      arduboy.println(F("Warrior"));
       arduboy.drawBitmap(0, 30, warrior_bmp, 20, 20, WHITE);
-      arduboy.print("Strong Attack");
+      arduboy.print(F("Strong Attack"));
       
       break;
       case 1:
-      arduboy.println("Tank");
+      arduboy.println(F("Tank"));
       arduboy.drawBitmap(0, 30, tank_bmp, 20, 20, WHITE);
-      arduboy.print("High Health & Defense");
+      arduboy.print(F("High Health & Defense"));
       break;
       case 2:
-      arduboy.println("Mage");
+      arduboy.print(F("Mage"));
       arduboy.drawBitmap(0, 30, mage_bmp, 20, 20, WHITE);
-      arduboy.print("Fast and frail");
+      arduboy.print(F("Fast and frail"));
       break;
   
     }
@@ -97,9 +98,9 @@ void  Intro(){
   arduboy.drawBitmap(0, 0, splashScreen, 128, 64, WHITE);
   //ADD GAME SPLASH SCREEN
   arduboy.setCursor(25, 0);
-  arduboy.print("Hit b to start");
+  arduboy.print(F("Hit b to start"));
   //ADD HELP SCREEN
-  if (arduboy.pressed(B_BUTTON)){
+  if (arduboy.justPressed(B_BUTTON)){
     gameStatus = charSelect;
     menuCase = 0;
   }
@@ -110,7 +111,7 @@ void MainMenu() {
   
   arduboy.clear();
   arduboy.setCursor(0, 0);
-  arduboy.print("MAIN MENU");
+  arduboy.print(F("MAIN MENU"));
   arduboy.drawLine(0, 10, 130, 10, WHITE);
   arduboy.setCursor(0, 12);
   
@@ -120,25 +121,29 @@ void MainMenu() {
     switch (menuCase) {
 
       case 0:
-      arduboy.print("stats");
+      arduboy.print(F("stats"));
       break;
       case 1:
       if( player.hp > 0){
-        arduboy.print("battle");
+        arduboy.print(F("battle"));
       }
       else {
-        arduboy.println("You are fainted");
-        arduboy.print("You cannot fight");
+        arduboy.print(F("You are fainted"));
+        arduboy.print(F("You cannot fight"));
       }
       break;
       case 2:
-      arduboy.print("quit");
+      arduboy.print(F("quit"));
       break;
-       case 3:
-      arduboy.print("Fight Arena Boss");
+      case 3:
+      if(arenaLvl < 3){
+       arduboy.print(F("Fight Arena Boss"));     }
+      else{
+       arduboy.print(F("you are the arena champion"));
+      }
       break;
       case 4:
-      arduboy.print("store");
+      arduboy.print(F("store"));
       break;
     }
 
@@ -161,7 +166,7 @@ void MainMenu() {
       setup();
       break;
       case 3:
-      if( player.hp > 0){
+      if( player.hp > 0  && arenaLvl < 3){
         gameStatus = bossBattle;
       }
       break;
@@ -181,13 +186,14 @@ void fight() {
   
     if(infight == false){
       arduboy.clear();
-      int x = rand() %3;
-      enemy.pickClass(x);
+      generateMob();
+      mob.level = 1;
       infight = true;
       menuCase = 0;
+
     }
   //RUN BATTLE
-    BattleScene(enemy); 
+    BattleScene(mob);
   
   
   
@@ -200,19 +206,27 @@ void bossFight(){
       infight = true;
       menuCase = 0;
       inbossfight = 1;
-    }
+    
     if(arenaLvl == 0){
-      enemy = actor("slime", 25, 8, 8, 6, 8, slime_bmp, {3, 0, 3, "slime ball", 0});
-      BattleScene(enemy);;
+      mob = enemy("slime", {3, 0, 3, "slime ball"}, {25, 8, 8, 6, 8}, slime_bmp);
+      mob.name = "Slime";
+      mob.bmp = slime_bmp;
+      mob.level = 1;
     }
-    if (arenaLvl == 1){
-      enemy = actor("troll", 30, 20, 6, 2, 4, troll_bmp, {4, 2, 0, "Club", 0});
-      BattleScene(enemy);
+    else if (arenaLvl == 1){
+      mob = enemy("troll", {4, 2, 0, "Club"}, {30, 20, 6, 4,},  troll_bmp);
+      mob.bmp = troll_bmp;
+      mob.name = "Troll";
+      mob.level = 2;
     }
-    if (arenaLvl == 2){
-      enemy = actor("ogre", 40, 20, 15, 4, 8, ogre_bmp, {6, 0, 0, "Ogre Claws", 0});
-      BattleScene(enemy);
+    else if (arenaLvl == 2){
+      mob = enemy("ogre", {6, 0, 0, "Ogre Claws"}, {40, 20, 15, 8}, ogre_bmp);
+      mob.bmp = ogre_bmp;
+      mob.name = "Ogre";
+      mob.level = 3;
     }
+  }
+    BattleScene(mob);
 }
 
 
@@ -220,7 +234,7 @@ void bossFight(){
 void  StatMenu() {
     arduboy.clear();
     arduboy.setCursor(0, 0);
-    arduboy.print("STATS v-INV >EQPT");
+    arduboy.print(F("STATS v-INV >EQPT"));
     arduboy.drawLine(0, 10, 130, 10, WHITE);
 
 
@@ -240,10 +254,10 @@ void  StatMenu() {
   if (equiptMenu == 1){
     arduboy.clear();
     arduboy.setCursor(0, 0);
-    arduboy.print("<STATS ");
+    arduboy.print(F("<STATS "));
     arduboy.drawLine(0, 10, 130, 10, WHITE);
     arduboy.setCursor(0, 12);
-    arduboy.println("Select item to equipt");
+    arduboy.println(F("Select item to equipt"));
     
       if (menuCase > 4){ menuCase = 0;}
       if (menuCase < 0){menuCase = 4;} 
@@ -261,15 +275,16 @@ void  StatMenu() {
   }
 }
 
-//END SCREEN PAUSE FOR FIGHTS
+//END SCREEN PAUSE ActorNm FIGHTS
 //ADD LOOT/MONEY/DROPPED ITEMS/ ETC
 void VictoryScreen(){
   arduboy.clear();
+  drawBoarder();
   arduboy.setCursor(40, 20);
-  arduboy.println("Victory");
-  arduboy.println("take 2 coins");
-  arduboy.println("as your prize");
-  arduboy.print("B to return to menu");
+  arduboy.println(F("Victory"));
+  arduboy.println(F("take 2 coins"));
+  arduboy.println(F("as your prize"));
+  arduboy.println(F("B to return to menu"));
 
   //add bonuses
 
@@ -291,26 +306,26 @@ void VictoryScreen(){
 //death screen
 void FailScreen(){
   arduboy.clear();
+  drawBoarder();
   arduboy.setCursor(2, 20);
-  arduboy.println("You have Failed");
-  arduboy.println("B to return to menu");
+  arduboy.println(F("You have Failed"));
+  arduboy.println(F("B to return to menu"));
 
   if(player.wallet < 1){
-    arduboy.println("The Arena Pitties you");
-    arduboy.println("Rest your wounds");
+    arduboy.println(F("The Arena Pitties you"));
+    arduboy.println(F("Rest your wounds"));
     
   }else{
-    arduboy.print("you've lost 2 coins");
+    arduboy.print(F("you've lost 2 coins"));
   }
   
   //Add Repercussions
 
-  if (arduboy.pressed(B_BUTTON)){
+  if (arduboy.justPressed(B_BUTTON)){
     
       gameStatus = menu;
       infight = false; 
-      player.hp = player.totalHP;
-      player.wallet -= 2;
+      player.hp = player.getStat(player.statSeed.totalHP);
       if(inbossfight == 1){
         inbossfight = 0;
         
@@ -326,31 +341,32 @@ void BattleScene(actor& opponent) {
  if (player.hp >0){
   if (opponent.hp >0){
     arduboy.clear();
-    arduboy.setCursor(0, 0);
+    arduboy.setCursor(6, 4);
     arduboy.print(opponent.name);
-    arduboy.print(" hp: ");
+    arduboy.setCursor(6, 14);
+    arduboy.print(F("hp: "));
     arduboy.println(opponent.hp);
-    arduboy.drawLine(0, 10, 65, 10, WHITE);
-    arduboy.setCursor(60, 52);
-    arduboy.print(player.hp);
-    arduboy.print(" / ");
-    arduboy.print(player.totalHP);
-    arduboy.print(" HP");
-    arduboy.drawLine(58, 62, 120, 62, WHITE);
+   // arduboy.drawLine(6, 14, 69, 14, WHITE);
+    arduboy.drawBitmap(5, 27, battleBKG, 56,32);
+    arduboy.drawBitmap(22, 29, mob.bmp, 20, 20, WHITE);
 
-    arduboy.drawBitmap(85, 0, enemy.bmp, 20, 20, WHITE);
-    arduboy.drawBitmap(8, 29, player.bmp, 20, 20, WHITE);
-    arduboy.setCursor(0, 50);
+   // arduboy.drawLine(64, 1, 64, 64);
+    drawFightBoarder();
+    
+    drawPlayerInfo();
+    //drawBoarder();
     Engagement(player, opponent);
 
  
   }
   else {
     VictoryScreen();
+    state = 0;
   }
  }
  else{
   FailScreen();
+  state = 0;
  }
 }
 
@@ -358,10 +374,12 @@ void BattleScene(actor& opponent) {
 void Store() {
 
   arduboy.clear();
-  arduboy.setCursor(0, 0);
-  arduboy.print("Store");
-  arduboy.drawLine(0, 10, 130, 10, WHITE);
-  arduboy.setCursor(0, 12);
+  arduboy.drawBitmap(0,0, storeScreen, 128, 64, WHITE);
+  arduboy.setCursor(8, 41);
+  arduboy.print("What'll have ye?");
+ // arduboy.print(F("Store"));
+  //arduboy.drawLine(0, 10, 130, 10, WHITE);
+  arduboy.setCursor(5, 54);
 
   //scroll menu
 
@@ -378,13 +396,13 @@ void Store() {
     switch (menuCase) {
 
       case 0:
-      arduboy.print("Buy new equiptment");
+      arduboy.print(F("Buy new equiptment"));
       break;
       case 1:
-      if (player.hp < player.totalHP){
-      arduboy.print("HEAL: 1 coin");
+      if (player.hp < player.getStat(player.statSeed.totalHP)){
+        arduboy.print(F("HEAL: 1 coin"));
       }else{
-        arduboy.print("You need not heal");
+        arduboy.print(F("You need not heal"));
       }
       break;
    
@@ -397,8 +415,8 @@ void Store() {
       menuNum = 1;
       break;
       case 1:
-      if(player.wallet > 0 && player.hp < player.totalHP){
-      player.hp = player.totalHP;
+      if(player.wallet > 0 && player.hp < player.getStat(player.statSeed.totalHP)){
+      player.hp = player.getStat(player.statSeed.totalHP);
       player.wallet -=1;
       }
       break;
@@ -413,16 +431,21 @@ void Store() {
     if (menuCase < 0){menuCase = 5;} 
    
     arduboy.clear();
+    arduboy.setCursor(8, 41);
+    arduboy.println(F("Here's what ye got"));
+    arduboy.drawBitmap(0,0, storeScreen, 128, 64, WHITE);
+    arduboy.setCursor(5, 54);
     arduboy.print(storeInventory[menuCase].name);
-    arduboy.print(" ");
+    arduboy.print(F(":"));
     arduboy.print(storeInventory[menuCase].cost);
-    arduboy.println(" coins");
+    arduboy.println(F("coins"));
 
     if (player.wallet < storeInventory[menuCase].cost){
-      arduboy.print("you lack the coins");
+      arduboy.setCursor(8, 41);
+      arduboy.print(F("Ye Broke"));
     }
 
-      if( arduboy.pressed(A_BUTTON) == true and abuff ==0 and player.wallet >= storeInventory[menuCase].cost){
+      if( arduboy.pressed(A_BUTTON) == true and abuff == 0 and player.wallet >= storeInventory[menuCase].cost){
         abuff = 1;
         itemSelected = menuCase;
         menuNum = 2;
@@ -435,8 +458,11 @@ void Store() {
     if (menuCase < 0){menuCase = 4;} 
   
     arduboy.clear();
-    arduboy.println("select slot in inventory");
-    arduboy.print("slot #: ");
+    arduboy.drawBitmap(0,0, storeScreen, 128, 64, WHITE);
+    arduboy.setCursor(8, 41);
+    arduboy.println(F("Select inv slot"));
+    arduboy.setCursor(5, 54);
+    arduboy.print(F("slot #: "));
     arduboy.print(menuCase);
     arduboy.print(" ");
     arduboy.println(player.inventory[menuCase].name);
@@ -452,4 +478,64 @@ void Store() {
       
 }
 
+void generateMob(){
+  int x = rand() %3;
+  switch(x){
+      case 0:
+      mob = enemy("slime", {1, 0, 0}, {10, 8, 5, 4, 0}, slime_bmp);
+      mob.name = "Warrior";
+      mob.bmp = warrior_bmp;
+      break;
+      
+      case 1:
+      mob = enemy("slime", {0, 1, 0}, {15, 4, 7, 2, 2}, slime_bmp);
+      mob.name = "Tank";
+      mob.bmp = tank_bmp;
+      break;
+
+      case 2:
+      mob = enemy("Mage", {0, 0, 1}, {8, 1, 1, 10, 10}, mage_bmp);
+      mob.name = "Mage";
+      mob.bmp = mage_bmp;
+      break;
+    }
+}
+
+void drawBoarder(){
+    arduboy.drawLine(3, 1, 123, 1, WHITE);
+    arduboy.drawLine(3, 63, 123, 63, WHITE);
+    arduboy.drawLine(1, 4, 1, 60, WHITE);
+    arduboy.drawLine(126, 4, 126, 60, WHITE);
+
+    arduboy.drawLine(3, 4, 1, 1, WHITE);
+    arduboy.drawLine(124, 4, 126, 1, WHITE);
+    arduboy.drawLine(124, 60, 126, 63, WHITE);
+    arduboy.drawLine(3, 60, 1, 63, WHITE);
+}
+
+void drawPlayerInfo(){
+  //arduboy.drawLine(64, 1, 64, 64);
+
+    
+    arduboy.setCursor(67, 36);
+    arduboy.print(player.hp);
+    arduboy.print(F("/"));
+    arduboy.print(player.getStat(player.statSeed.totalHP));
+    arduboy.print(F("HP"));
+   // arduboy.drawLine(56, 60, 118, 60, WHITE);
+
+    arduboy.drawBitmap(100, 6, player.bmp, 20, 20, WHITE);
+    arduboy.setCursor(0, 50);
+
+    arduboy.drawLine(67, 48, 122, 48, WHITE);
+    arduboy.drawLine(67, 58, 122, 58, WHITE);
+    arduboy.drawLine(67, 48, 67, 58, WHITE);
+    arduboy.drawLine(122, 48, 122, 58, WHITE);
+    arduboy.setCursor(70, 50);
+}
+
+
+void drawFightBoarder(){
+    arduboy.drawBitmap(0,0, battleMap, 128, 64);
+}
 
