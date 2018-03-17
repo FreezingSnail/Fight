@@ -41,6 +41,8 @@ class actor {
    takeSpecial(actor attacker);
    levelUp();
    getStat (uint16_t stat);
+   int expDrop();
+
 
 
 };

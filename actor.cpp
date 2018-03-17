@@ -9,7 +9,7 @@ actor::actor() {
   hp;
   bmp;
   equpment weapon;
-  level = 1;
+  level=1;
   baseStats statSeed;
 }
   
@@ -51,9 +51,13 @@ actor::levelUp(){
 }
 
 actor::getStat(uint16_t stat){
-  //(((10*2) * ((B1^2)/2)- 2))/2
-  return ((((stat*2)*(pow(level, 2)/2)) -2)/2)+1;
+  //=(((3 * B1))/4)+1
+  return ((((stat* level)/4)) +level);
   
+}
+
+actor::expDrop(){
+  return level*2;
 }
 
 //warrior::warrior{

@@ -21,10 +21,10 @@ void loop() {
   arduboy.pollButtons();
 
   if( arduboy.justPressed(UP_BUTTON) == true){
-      menuCase++;
+      menuCase--;
     }
     if( arduboy.justPressed(DOWN_BUTTON) == true){
-       menuCase--;
+       menuCase++;
     }
 
   if( arduboy.notPressed(A_BUTTON) == true ) {
