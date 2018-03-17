@@ -5,13 +5,15 @@
 
 playerCharacter::playerCharacter(): actor() {
   wallet = 100;
+  level = 1;
   //weapon = {1, 0, 0, "debug"};
   inventory[5];
+  ex=0;
   for (uint16_t x; x<5; x++){
     inventory[x] = {0, 0, 0, "EMPTY"};
   } 
 
-  inventory[0] = weapon;
+  
 }
 
 playerCharacter::printStats() {
@@ -38,6 +40,8 @@ playerCharacter::printStats() {
       arduboy.setCursor(75, 12);
       arduboy.print(F("Lvl:"));
       arduboy.print(level);
+      arduboy.print(F(" "));
+      arduboy.print(ex);
       arduboy.setCursor(75, 20);
       arduboy.println(weapon.name);
       arduboy.setCursor(75, 28);
@@ -103,5 +107,14 @@ playerCharacter::pickClass(uint16_t type){
       break;
     }
  }
-  
+
+//exp to level up
+//3*(B1^2)
+
+playerCharacter::checkLvlUp(){
+  int expBarrier = (3*pow(level, 2))+4;
+  if (ex >expBarrier){
+    level++;
+  }
+}
 

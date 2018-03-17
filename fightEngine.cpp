@@ -49,10 +49,10 @@ if(state == 0){
     switch (menuCase) {
 
       case 0:
-      arduboy.print(F("attack"));
+      arduboy.print(F("Attack"));
       break;
       case 1:
-      arduboy.print(F("defend"));
+      arduboy.print(F("Defend"));
       break;
       case 2:
       arduboy.print(F("Special"));
@@ -153,7 +153,7 @@ else if(state == 1){
         }else if( enemyMove == attack){
           arduboy.println(F("The mob"));
           arduboy.setCursor(6,14);
-          arduboy.println(F("attacked"));
+          arduboy.println(F("Attacked"));
           
         }
         else{
@@ -161,7 +161,7 @@ else if(state == 1){
           arduboy.setCursor(6,14);
           arduboy.println(F("used ")); 
           arduboy.setCursor(6,24);
-          arduboy.println(F("magic")); 
+          arduboy.println(F("Magic")); 
 
               
         }
