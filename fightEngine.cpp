@@ -1,6 +1,7 @@
 #include "gameEngine.h"
 #include "Globals.h"
 #include "actor.h"
+#include "player.h"
 
 
 
@@ -38,13 +39,13 @@ void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove
       
 }
 
-void Engagement(actor& plyr, actor& cpu){
+void Engagement(playerCharacter& plyr, actor& cpu){
 if(state == 0){
 //recieve player input
   if(moveChoiseMade == 0){
     turnComplete = false;
-    if (menuCase > 2){ menuCase = 0;}
-    if (menuCase < 0){menuCase = 2;} 
+    if (menuCase > 3){ menuCase = 0;}
+    if (menuCase < 0){menuCase = 3;} 
 
     switch (menuCase) {
 
@@ -56,6 +57,9 @@ if(state == 0){
       break;
       case 2:
       arduboy.print(F("Special"));
+      break;
+      case 3:
+      arduboy.print(F("Potion"));
       break;
    
     }
@@ -76,6 +80,12 @@ if(state == 0){
       case 2:
       playerMove = special;
       moveChoiseMade = 1;
+      break;
+      case 3:
+      if (plyr.potion > 0){
+      plyr.usePotion();
+      moveChoiseMade = 1;
+      }
       break;
     }
    }

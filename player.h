@@ -11,12 +11,14 @@ public:
   equpment inventory[5];
   int ex;
   int arenalvl;
+  int potion;
 
    printInv();
    printStats();
    equipt(uint16_t inventoryLocation);
    pickClass(uint16_t x);
    checkLvlUp();
+   usePotion();
   
 };
 

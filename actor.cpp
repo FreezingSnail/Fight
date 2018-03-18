@@ -17,7 +17,7 @@ actor::actor() {
 
  
 actor::damage(){
-    return (getStat(statSeed.strength) / 3);
+    return (getStat(statSeed.strength) / 2);
 }
 
 actor::takeDamage(actor attacker, uint16_t modifier){
@@ -34,7 +34,7 @@ actor::takeDamage(actor attacker, uint16_t modifier){
 
 actor::takeSpecial(actor attacker){
   
-  int damageval = ((getStat(attacker.statSeed.special))+weapon.spcMod);
+  int damageval = (((getStat(attacker.statSeed.special)/2)+weapon.spcMod-((getStat(statSeed.special)/2)-weapon.spcMod) ));
       if (damageval > 0){
         hp -= damageval;
       }

@@ -29,6 +29,7 @@ uint16_t itemSelected;
 uint16_t arenaLvl = 0;      
 uint16_t inbossfight =  0;
 int mobHP;
+int liveCounter = 5;
 
 //CHARACTER SELECTION
 void gameStart(){
@@ -200,7 +201,7 @@ void MainMenu() {
       setup();
       break;
       case 3:
-      if( player.hp > 0  && arenaLvl < 3){
+      if( player.hp > 0  && arenaLvl < 4){
         gameStatus = bossBattle;
       }
       break;
@@ -241,7 +242,7 @@ void bossFight(){
       inbossfight = 1;
     
     if(arenaLvl == 0){
-      setMob("slime", {3, 0, 3, "slime ball"}, {25, 8, 8, 6, 8}, slime_bmp, 3);
+      setMob("slime", {3, 0, 3, "slime ball"}, {28, 8, 10, 6, 8}, slime_bmp, 3);
       //mob.statSeed = {25, 8, 8, 6, 8};
       //mob.name = "Slime";
       mob.bmp = slime_bmp;
@@ -249,18 +250,18 @@ void bossFight(){
       //mob.level = 3;
     }
     else if (arenaLvl == 1){
-      setMob("troll", {4, 2, 0, "Club"}, {30, 20, 6, 4,},  troll_bmp, 4);
+      setMob("troll", {4, 2, 0, "Club"}, {20, 15, 10, 7, 8},  troll_bmp, 4);
       mob.bmp = troll_bmp;
       //mob.name = "Troll";
      // mob.level = 2;
     }
     else if (arenaLvl == 2){
-      setMob("ogre", {6, 0, 0, "Ogre Claws"}, {40, 20, 15, 8}, ogre_bmp, 5);
+      setMob("ogre", {6, 0, 0, "Ogre Claws"}, {20, 20, 15, 5, 0}, ogre_bmp, 5);
       mob.bmp = ogre_bmp;
      // mob.name = "Ogre";
     }
      else if (arenaLvl == 3){
-      setMob("Master", {15, 0, 0, "Schimtar"}, {50, 25, 20, 15}, ogre_bmp, 6);
+      setMob("Master", {15, 0, 0, "Schimtar"}, {20, 15, 15, 10, 10}, ogre_bmp, 6);
       mob.bmp = arenaMaster_bmp;
      // mob.name = "Master";
      }
@@ -352,19 +353,19 @@ void VictoryScreen(){
 void FailScreen(){
   arduboy.clear();
   drawBoarder();
-  arduboy.setCursor(20, 20);
+  arduboy.setCursor(10, 20);
   arduboy.println(F("You have Failed"));
-  arduboy.setCursor(20, 30);
+  arduboy.setCursor(10, 30);
   arduboy.println(F("B to return to menu"));
 
   if(player.wallet < 1){
-    arduboy.setCursor(15, 40);
+    arduboy.setCursor(10, 40);
     arduboy.println(F("The Arena Pitties you"));
-    arduboy.setCursor(20, 50);
+    arduboy.setCursor(10, 50);
     arduboy.println(F("Rest your wounds"));
     
   }else{
-    arduboy.setCursor(15, 40);
+    arduboy.setCursor(10, 40);
     arduboy.print(F("you've lost 2 coins"));
   }
   
@@ -442,8 +443,8 @@ void Store() {
     }
 
     if(menuNum == 0){
-    if (menuCase > 1){ menuCase = 0;}
-    if (menuCase < 0){menuCase = 1;} 
+    if (menuCase > 2){ menuCase = 0;}
+    if (menuCase < 0){menuCase = 2;} 
 
     switch (menuCase) {
 
@@ -455,6 +456,16 @@ void Store() {
         arduboy.print(F("HEAL: 1 coin"));
       }else{
         arduboy.print(F("You need not heal"));
+      }
+      break;
+      case 2:
+      if (player.potion >= 0 && player.potion < 2 && player.wallet > 2){
+          arduboy.print(F("Buy a Potion? 3 Coin"));
+      }else if (player.wallet < 3){
+        arduboy.print(F("ye short on coin"));
+      }
+      else {
+        arduboy.print(F("Ye potion bag is ful"));
       }
       break;
    
@@ -470,6 +481,12 @@ void Store() {
       if(player.wallet > 0 && player.hp < player.getStat(player.statSeed.totalHP)){
       player.hp = player.getStat(player.statSeed.totalHP);
       player.wallet -=1;
+      }
+      break;
+      case 2:
+      if (player.potion >= 0 && player.potion <= 2 && player.wallet > 2){
+          player.potion++;
+          player.wallet -=3;
       }
       break;
       }
@@ -550,19 +567,19 @@ void generateMob(){
       break;
 
       case 2:
-      setMob("", {0, 0, 1}, {8, 1, 1, 10, 8}, mage_bmp, moblvl);
+      setMob("", {0, 0, 1}, {8, 1, 2, 8, 8}, mage_bmp, moblvl);
       mob.name = "Warlock";
       mob.bmp = mage_bmp;
       break;
 
       case 3:
-      setMob("", {1, 0, 1}, {8, 10, 3, 1, 8}, mage_bmp, moblvl);
+      setMob("", {1, 0, 1}, {5, 7, 4, 8, 1}, mage_bmp, moblvl);
       mob.name = "Spider";
       mob.bmp = spider_bmp;
       break;
 
       case 4:
-      setMob("", {0, 1, 1}, {4, 10, 3, 1, 10}, mage_bmp, moblvl);
+      setMob("", {0, 1, 1}, {7, 8, 6, 1, 3}, mage_bmp, moblvl);
       mob.name = "Orc";
       mob.bmp = orc_bmp;
       break;
@@ -571,14 +588,14 @@ void generateMob(){
 
 void drawBoarder(){
     arduboy.drawLine(3, 1, 123, 1, WHITE);
-    arduboy.drawLine(3, 63, 123, 63, WHITE);
+    arduboy.drawLine(3, 64, 123, 64, WHITE);
     arduboy.drawLine(1, 4, 1, 60, WHITE);
     arduboy.drawLine(126, 4, 126, 60, WHITE);
 
     arduboy.drawLine(3, 4, 1, 1, WHITE);
     arduboy.drawLine(124, 4, 126, 1, WHITE);
-    arduboy.drawLine(124, 60, 126, 63, WHITE);
-    arduboy.drawLine(3, 60, 1, 63, WHITE);
+    arduboy.drawLine(124, 60, 126, 64, WHITE);
+    arduboy.drawLine(3, 60, 1, 64, WHITE);
 }
 
 void drawPlayerInfo(){
@@ -606,6 +623,14 @@ void drawPlayerInfo(){
     arduboy.print(mob.level);
 
     arduboy.setCursor(70, 50);
+
+      if (player.potion == 1){
+        arduboy.drawBitmap( 70, 23, potion_bmp, 8,8, WHITE);
+      }
+      else if (player.potion == 2){
+        arduboy.drawBitmap( 70, 23, potion_bmp, 8,8, WHITE);
+        arduboy.drawBitmap( 80, 23, potion_bmp, 8,8, WHITE);
+      }
 }
 
 
