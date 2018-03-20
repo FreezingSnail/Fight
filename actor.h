@@ -36,12 +36,12 @@ class actor {
    explicit actor();
   // pickClass(uint16_t type);
    
-   damage();
-   takeDamage(actor attacker, uint16_t x);
-   takeSpecial(actor attacker);
-   levelUp();
-   getStat (uint16_t stat);
-   int expDrop();
+   uint16_t damage();
+   void takeDamage(actor attacker, uint16_t x);
+   void takeSpecial(actor attacker);
+   void levelUp();
+   uint16_t getStat (uint16_t stat);
+   uint16_t expDrop();
 
 
 
