@@ -94,7 +94,6 @@ void playerCharacter::pickClass(uint16_t type){
 
       case 1:
       name = "Tank";
-      //inventory[0] = {0, 1, 0, "Sheild"};
       weapon = {0, 1, 0, "Sheild", 0};
       bmp = tank_bmp; 
       statSeed = {20, 5, 10, 2, 3};
@@ -104,8 +103,7 @@ void playerCharacter::pickClass(uint16_t type){
       case 2:
       name = "mage";
       bmp = mage_bmp;
-      //inventory[0] = {0, 0, 1, "Staff"};
-      weapon = {0, 0, 1, "Staff"};
+      weapon = {0, 0, 1, "Staff", 0};
       statSeed = {8, 5, 3, 2, 12};
       hp = getStat(statSeed.totalHP);
       break;
