@@ -9,7 +9,7 @@ playerCharacter::playerCharacter(): actor() {
   potion = 0;
   ex = 0;
   for (uint8_t x = 0; x < 5; ++x) {
-    inventory[x] = {0, 0, 0, "EMPTY"};
+    inventory[x] = { 0, 0, 0, "EMPTY", 0 };
   }
 }
 
@@ -65,7 +65,7 @@ void playerCharacter::printStats() {
 }
 
 void playerCharacter::equipt(uint16_t inventoryLocation){
-  weapon = {inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name};
+  weapon = { inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name, 0 };
 }
 
 void playerCharacter::printInv(){
@@ -84,27 +84,27 @@ void playerCharacter::pickClass(uint16_t type){
  
     switch(type){
       case 0:
-      statSeed = {13, 13, 6, 6, 2};
+      statSeed = { 13, 13, 6, 6, 2 };
       name = "warrior";
       hp = getStat(statSeed.totalHP);
       bmp = warrior_bmp;
-      inventory[0] = {1, 0, 0, "Sword", 0};
+      inventory[0] = { 1, 0, 0, "Sword", 0 };
       weapon = inventory[0];
       break;
 
       case 1:
       name = "Tank";
-      weapon = {0, 1, 0, "Sheild", 0};
+      weapon = { 0, 1, 0, "Sheild", 0} ;
       bmp = tank_bmp; 
-      statSeed = {20, 5, 10, 2, 3};
+      statSeed = { 20, 5, 10, 2, 3 };
       hp = getStat(statSeed.totalHP);
       break;
 
       case 2:
       name = "mage";
       bmp = mage_bmp;
-      weapon = {0, 0, 1, "Staff", 0};
-      statSeed = {8, 5, 3, 2, 12};
+      weapon = { 0, 0, 1, "Staff", 0 };
+      statSeed = { 8, 5, 3, 2, 12 };
       hp = getStat(statSeed.totalHP);
       break;
     }
