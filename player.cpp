@@ -7,14 +7,10 @@ playerCharacter::playerCharacter(): actor() {
   wallet = 5;
   level = 1;
   potion = 0;
-  //weapon = {1, 0, 0, "debug"};
-  inventory[5];
-  ex=0;
-  for (uint16_t x; x<5; x++){
+  ex = 0;
+  for (uint8_t x = 0; x < 5; ++x) {
     inventory[x] = {0, 0, 0, "EMPTY"};
-  } 
-
-  
+  }
 }
 
 playerCharacter::printStats() {
