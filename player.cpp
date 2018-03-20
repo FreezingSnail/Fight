@@ -13,7 +13,7 @@ playerCharacter::playerCharacter(): actor() {
   }
 }
 
-playerCharacter::printStats() {
+void playerCharacter::printStats() {
 
     if (menuCase > 1){ menuCase = 0;}
     if (menuCase < 0){menuCase = 1;} 
@@ -64,11 +64,11 @@ playerCharacter::printStats() {
     }
 }
 
-playerCharacter::equipt(uint16_t inventoryLocation){
+void playerCharacter::equipt(uint16_t inventoryLocation){
   weapon = {inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name};
 }
 
-playerCharacter::printInv(){
+void playerCharacter::printInv(){
      for( uint16_t x = 0; x < 5 ; x++){
         arduboy.print(inventory[x].name);
         arduboy.print(F(" a:"));
@@ -80,7 +80,7 @@ playerCharacter::printInv(){
      }
 }
 
-playerCharacter::pickClass(uint16_t type){
+void playerCharacter::pickClass(uint16_t type){
  
     switch(type){
       case 0:
@@ -115,7 +115,7 @@ playerCharacter::pickClass(uint16_t type){
 //exp to level up
 //3*(B1^2)
 
-playerCharacter::checkLvlUp(){
+void playerCharacter::checkLvlUp(){
   int expBarrier = (3*pow(level, 2))+4;
   if (ex >expBarrier){
     level++;
@@ -123,7 +123,7 @@ playerCharacter::checkLvlUp(){
 }
 
 //restores half of your health
-playerCharacter::usePotion(){
+void playerCharacter::usePotion(){
   potion--;
   if( hp < (getStat(statSeed.totalHP)/2)){ 
     hp += (getStat(statSeed.totalHP)/2);
