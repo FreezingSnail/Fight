@@ -27,7 +27,7 @@ class actor {
   public:
   const char* name;
   int hp;
-  byte* bmp;
+  const byte* bmp;
   uint16_t level;
   equpment weapon;
   baseStats statSeed;
