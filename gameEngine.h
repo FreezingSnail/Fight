@@ -21,4 +21,4 @@ void drawPlayerInfo();
 void drawFightBoarder();
 void setMob(const char * nm, equpment wpn, baseStats seed, const byte * sprite, int lvl);
 
-#endif gameEngine_h
+#endif // gameEngine_h
