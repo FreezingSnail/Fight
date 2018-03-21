@@ -22,14 +22,6 @@ enum GameStatus {
 extern GameStatus gameStatus;
 extern int menuCase;
 
-enum moveType {
-  attack,
-  defend,
-  special,
-};
-
-extern moveType playerMove;
-extern moveType enemyMove;
 
 
 #endif Globals_h

@@ -3,7 +3,7 @@
 #include "actor.h"
 #include "fightEngine.h"
 #include "images.h"
-#include "bossActors.h"
+//#include "bossActors.h"
 #include "player.h"
 #include "enemy.h"
 
@@ -588,14 +588,14 @@ void generateMob(){
 
 void drawBoarder(){
     arduboy.drawLine(3, 1, 123, 1, WHITE);
-    arduboy.drawLine(3, 64, 123, 64, WHITE);
+    arduboy.drawLine(3, 62, 123, 62, WHITE);
     arduboy.drawLine(1, 4, 1, 60, WHITE);
     arduboy.drawLine(126, 4, 126, 60, WHITE);
 
     arduboy.drawLine(3, 4, 1, 1, WHITE);
     arduboy.drawLine(124, 4, 126, 1, WHITE);
-    arduboy.drawLine(124, 60, 126, 64, WHITE);
-    arduboy.drawLine(3, 60, 1, 64, WHITE);
+    arduboy.drawLine(124, 60, 126, 62, WHITE);
+    arduboy.drawLine(3, 60, 1, 62, WHITE);
 }
 
 void drawPlayerInfo(){

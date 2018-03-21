@@ -3,7 +3,17 @@
 #include "actor.h"
 #include "player.h"
 
+enum moveType {
+  attack,
+  defend,
+  special,
+  magic,
+  item,
+  skip, 
+};
 
+moveType playerMove;
+moveType enemyMove;
 
 uint16_t moveChoiseMade;
 bool playerFirst;
@@ -25,13 +35,20 @@ void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove
           target.takeDamage(agressor, 0);
           
         }
-        else{
+        else{ //magic/item use results in more damage taken
           target.takeDamage(agressor, 2); 
               
         }
       }
-      else if (agesMove == defend){state = 1;}  
+      else if (agesMove == defend)
+      {          target.takeDamage(agressor, -5); 
+      }  
+      else if (agesMove == item){}//nothing
+      else if (agesMove == skip){}
       else if (agesMove == special){
+        
+      }
+      else if (agesMove == magic){
         target.takeSpecial(agressor);
         
       }
@@ -56,7 +73,7 @@ if(state == 0){
       arduboy.print(F("Defend"));
       break;
       case 2:
-      arduboy.print(F("Special"));
+      arduboy.print(F("Magic"));
       break;
       case 3:
       arduboy.print(F("Potion"));
@@ -78,12 +95,13 @@ if(state == 0){
       moveChoiseMade = 1;
       break;
       case 2:
-      playerMove = special;
+      playerMove = magic;
       moveChoiseMade = 1;
       break;
       case 3:
       if (plyr.potion > 0){
       plyr.usePotion();
+      playerMove = item;
       moveChoiseMade = 1;
       }
       break;
