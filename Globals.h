@@ -32,5 +32,5 @@ extern moveType playerMove;
 extern moveType enemyMove;
 
 
-#endif Globals_h
+#endif // Globals_h
 

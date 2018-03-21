@@ -63,7 +63,7 @@ class actor {
   
 //};
 
-#endif actor_h
+#endif // actor_h
 
 
 
