@@ -19,6 +19,6 @@ void generateMob();
 void drawBoarder();
 void drawPlayerInfo();
 void drawFightBoarder();
-void setMob(char* nm, equpment wpn, baseStats seed, byte sprite, int lvl);
+void setMob(const char * nm, equpment wpn, baseStats seed, const byte * sprite, int lvl);
 
-#endif gameEngine_h
+#endif // gameEngine_h

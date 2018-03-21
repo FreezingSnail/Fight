@@ -24,5 +24,5 @@ extern int menuCase;
 
 
 
-#endif Globals_h
+#endif // Globals_h
 

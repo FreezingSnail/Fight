@@ -7,17 +7,13 @@ playerCharacter::playerCharacter(): actor() {
   wallet = 5;
   level = 1;
   potion = 0;
-  //weapon = {1, 0, 0, "debug"};
-  inventory[5];
-  ex=0;
-  for (uint16_t x; x<5; x++){
-    inventory[x] = {0, 0, 0, "EMPTY"};
-  } 
-
-  
+  ex = 0;
+  for (uint8_t x = 0; x < 5; ++x) {
+    inventory[x] = { 0, 0, 0, "EMPTY", 0 };
+  }
 }
 
-playerCharacter::printStats() {
+void playerCharacter::printStats() {
 
     if (menuCase > 1){ menuCase = 0;}
     if (menuCase < 0){menuCase = 1;} 
@@ -68,11 +64,11 @@ playerCharacter::printStats() {
     }
 }
 
-playerCharacter::equipt(uint16_t inventoryLocation){
-  weapon = {inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name};
+void playerCharacter::equipt(uint16_t inventoryLocation){
+  weapon = { inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name, 0 };
 }
 
-playerCharacter::printInv(){
+void playerCharacter::printInv(){
      for( uint16_t x = 0; x < 5 ; x++){
         arduboy.print(inventory[x].name);
         arduboy.print(F(" a:"));
@@ -84,33 +80,31 @@ playerCharacter::printInv(){
      }
 }
 
-playerCharacter::pickClass(uint16_t type){
+void playerCharacter::pickClass(uint16_t type){
  
     switch(type){
       case 0:
-      statSeed = {13, 13, 6, 6, 2};
+      statSeed = { 13, 13, 6, 6, 2 };
       name = "warrior";
       hp = getStat(statSeed.totalHP);
       bmp = warrior_bmp;
-      inventory[0] = {1, 0, 0, "Sword", 0};
+      inventory[0] = { 1, 0, 0, "Sword", 0 };
       weapon = inventory[0];
       break;
 
       case 1:
       name = "Tank";
-      //inventory[0] = {0, 1, 0, "Sheild"};
-      weapon = {0, 1, 0, "Sheild", 0};
+      weapon = { 0, 1, 0, "Sheild", 0} ;
       bmp = tank_bmp; 
-      statSeed = {20, 5, 10, 2, 3};
+      statSeed = { 20, 5, 10, 2, 3 };
       hp = getStat(statSeed.totalHP);
       break;
 
       case 2:
       name = "mage";
       bmp = mage_bmp;
-      //inventory[0] = {0, 0, 1, "Staff"};
-      weapon = {0, 0, 1, "Staff"};
-      statSeed = {8, 5, 3, 2, 12};
+      weapon = { 0, 0, 1, "Staff", 0 };
+      statSeed = { 8, 5, 3, 2, 12 };
       hp = getStat(statSeed.totalHP);
       break;
     }
@@ -119,7 +113,7 @@ playerCharacter::pickClass(uint16_t type){
 //exp to level up
 //3*(B1^2)
 
-playerCharacter::checkLvlUp(){
+void playerCharacter::checkLvlUp(){
   int expBarrier = (3*pow(level, 2))+4;
   if (ex >expBarrier){
     level++;
@@ -127,7 +121,7 @@ playerCharacter::checkLvlUp(){
 }
 
 //restores half of your health
-playerCharacter::usePotion(){
+void playerCharacter::usePotion(){
   potion--;
   if( hp < (getStat(statSeed.totalHP)/2)){ 
     hp += (getStat(statSeed.totalHP)/2);

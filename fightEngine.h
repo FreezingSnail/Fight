@@ -16,4 +16,4 @@ enum moveType {
 void Engagement(playerCharacter& plyr, actor& cpu);
 void engage(actor& agressor, actor& target, moveType agresMove, moveType trgtMove);  
 
-#endif fightEngine_h
+#endif // fightEngine_h

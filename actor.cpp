@@ -16,11 +16,11 @@ actor::actor() {
  
 
  
-actor::damage(){
+uint16_t actor::damage(){
     return (getStat(statSeed.strength) / 2);
 }
 
-actor::takeDamage(actor attacker, uint16_t modifier){
+void actor::takeDamage(actor attacker, uint16_t modifier){
   
      int damageval = (((attacker.damage())+attacker.weapon.atkMod) - ((getStat(statSeed.defense)/2)-weapon.defMod) - modifier);
       if (damageval > 0){
@@ -32,7 +32,7 @@ actor::takeDamage(actor attacker, uint16_t modifier){
 }
 
 
-actor::takeSpecial(actor attacker){
+void actor::takeSpecial(actor attacker){
   
   int damageval = (((getStat(attacker.statSeed.special)/2)+weapon.spcMod-((getStat(statSeed.special)/2)-weapon.spcMod) ));
       if (damageval > 0){
@@ -42,7 +42,7 @@ actor::takeSpecial(actor attacker){
       }
 }
 
-actor::levelUp(){
+void actor::levelUp(){
   level++;
   hp = statSeed.totalHP;
 
@@ -50,13 +50,13 @@ actor::levelUp(){
   
 }
 
-actor::getStat(uint16_t stat){
+uint16_t actor::getStat(uint16_t stat){
   //=(((3 * B1))/4)+1
   return ((((stat* level)/4)) +level);
   
 }
 
-actor::expDrop(){
+uint16_t actor::expDrop(){
   return level*2;
 }
 

@@ -638,7 +638,7 @@ void drawFightBoarder(){
     arduboy.drawBitmap(0,0, battleMap, 128, 64);
 }
 
-void setMob(char* nm, equpment wpn, baseStats seed, byte sprite, int lvl){
+void setMob(const char * nm, equpment wpn, baseStats seed, const byte * sprite, int lvl){
       mob.statSeed = seed;
       mob.name = nm;
       mob.bmp = sprite;

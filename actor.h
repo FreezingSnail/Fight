@@ -27,7 +27,7 @@ class actor {
   public:
   const char* name;
   int hp;
-  byte* bmp;
+  const byte* bmp;
   uint16_t level;
   equpment weapon;
   baseStats statSeed;
@@ -36,12 +36,12 @@ class actor {
    explicit actor();
   // pickClass(uint16_t type);
    
-   damage();
-   takeDamage(actor attacker, uint16_t x);
-   takeSpecial(actor attacker);
-   levelUp();
-   getStat (uint16_t stat);
-   int expDrop();
+   uint16_t damage();
+   void takeDamage(actor attacker, uint16_t x);
+   void takeSpecial(actor attacker);
+   void levelUp();
+   uint16_t getStat (uint16_t stat);
+   uint16_t expDrop();
 
 
 
@@ -63,7 +63,7 @@ class actor {
   
 //};
 
-#endif actor_h
+#endif // actor_h
 
 
 

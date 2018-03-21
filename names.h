@@ -10,4 +10,4 @@ const char ActorNmWarrior[] PROGMEM = "Warrior";
 const char ActorNmMage[] PROGMEM = "Mage";
 const char ActorNmTank[] PROGMEM = "Tank";
 
-#endif names_h
+#endif // names_h

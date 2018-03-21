@@ -5,13 +5,11 @@
 class enemy: public actor{
   
 public:
-  enemy(char* nm, equpment wpn, baseStats seed, byte sprite, int lvl);
-
-  setMob(char* nm, equpment wpn, baseStats seed, byte sprite, int lvl);
+  enemy(const char * nm, equpment wpn, baseStats seed, const uint8_t * sprite, int lvl);
 
 
 };
 
 
-#endif enemy_h
+#endif // enemy_h
 

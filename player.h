@@ -13,16 +13,16 @@ public:
   int arenalvl;
   int potion;
 
-   printInv();
-   printStats();
-   equipt(uint16_t inventoryLocation);
-   pickClass(uint16_t x);
-   checkLvlUp();
-   usePotion();
+  void printInv();
+  void printStats();
+  void equipt(uint16_t inventoryLocation);
+  void pickClass(uint16_t x);
+  void checkLvlUp();
+  void usePotion();
   
 };
 
 
 
-#endif player_h
+#endif // player_h
 
