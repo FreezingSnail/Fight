@@ -1,14 +1,15 @@
 #ifndef player_h
 #define player_h
 #include "actor.h"
+#include "weapons.h"
 
 class playerCharacter: public actor{
   
 public:
   playerCharacter();
   int wallet;
-  equpment weapon;
-  equpment inventory[5];
+  weaponId equiptedWpn;
+  weaponId inv[5]; //= {InvSlot1, InvSlot2, InvSlot3, InvSlot4, InvSlot5};
   int ex;
   int arenalvl;
   int potion;

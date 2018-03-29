@@ -3,9 +3,9 @@
 #include "actor.h"
 #include "fightEngine.h"
 #include "images.h"
-//#include "bossActors.h"
 #include "player.h"
 #include "enemy.h"
+#include "weapons.h"
 
 //INITIALIZE ACTORS
 //actor(char* nm, int h, int str, int def, int spd, int spc, byte BMP, equpment Item);
@@ -18,7 +18,12 @@ enemy mob = enemy("troll", {4, 2, 0, "Club"}, {30, 20, 6, 4,},  troll_bmp, 4);
 //playerCharacter test = playerCharacter("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0});
 
 //STORE INVENTORY ARRA
-const equpment storeInventory[] = {{5, 2, 0, "Kleaver", 10}, {2, 5, 0, "Broad Shield", 10}, {0, 2, 5, "Wand", 10}, {7, 5, 3, "Katana", 20}, {5, 7, 3, "Iron Sheild", 20}, {3, 5, 7, "Mangus Rod", 20}}; 
+const weaponId storeInventory[] = { kleaver,
+  broadSheild,
+  wand,
+  katana,
+  ironShield,
+  magnusRod, }; 
 
 //OTHER INTS FOR MENU LOCATIONS
 
@@ -29,7 +34,7 @@ uint16_t itemSelected;
 uint16_t arenaLvl = 0;      
 uint16_t inbossfight =  0;
 int mobHP;
-int liveCounter = 5;
+//int liveCounter = 5;
 
 //CHARACTER SELECTION
 void gameStart(){
@@ -103,7 +108,10 @@ void  Intro(){
   arduboy.drawBitmap(0, 0, splashScreen, 128, 64, WHITE);
   //ADD GAME SPLASH SCREEN
   arduboy.setCursor(25, 0);
-  arduboy.print(F("Hit b to start"));
+ // arduboy.print(F("Hit b to start"));
+ //int  katanacost = pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[0])].cost);
+//  arduboy.print(katanacost);
+  //arduboy.print("testing");
   //ADD HELP SCREEN
   if (arduboy.justPressed(B_BUTTON)){
     gameStatus = charSelect;
@@ -302,7 +310,7 @@ void  StatMenu() {
     
       if (menuCase > 4){ menuCase = 0;}
       if (menuCase < 0){menuCase = 4;} 
-      arduboy.print(player.inventory[menuCase].name);
+      arduboy.print(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(player.inv[menuCase])].name)));
       
       if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
           player.equipt(menuCase);
@@ -496,25 +504,25 @@ void Store() {
 
 //display store inventory
   if(menuNum == 1){
-    if (menuCase > 5){ menuCase = 0;}
-    if (menuCase < 0){menuCase = 5;} 
+    if (menuCase > 4){ menuCase = 0;}
+    if (menuCase < 0){menuCase = 4;} 
    
     arduboy.clear();
     arduboy.setCursor(8, 41);
     arduboy.println(F("Here's what ye got"));
     arduboy.drawBitmap(0,0, storeScreen, 128, 64, WHITE);
     arduboy.setCursor(5, 54);
-    arduboy.print(storeInventory[menuCase].name);
+    arduboy.print(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].name)));
     arduboy.print(F(":"));
-    arduboy.print(storeInventory[menuCase].cost);
+    arduboy.print(pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].cost));
     arduboy.println(F("coins"));
 
-    if (player.wallet < storeInventory[menuCase].cost){
-      arduboy.setCursor(8, 41);
-      arduboy.print(F("Ye Broke"));
-    }
+   // if (player.wallet < weaponArray[menuCase].cost){
+     // arduboy.setCursor(8, 41);
+      //arduboy.print(F("Ye Broke"));
+    //}
 
-      if( arduboy.pressed(A_BUTTON) == true and abuff == 0 and player.wallet >= storeInventory[menuCase].cost){
+      if( arduboy.pressed(A_BUTTON) && abuff == 0 && player.wallet >= pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].cost)){
         abuff = 1;
         itemSelected = menuCase;
         menuNum = 2;
@@ -534,11 +542,11 @@ void Store() {
     arduboy.print(F("slot #: "));
     arduboy.print(menuCase);
     arduboy.print(" ");
-    arduboy.println(player.inventory[menuCase].name);
+    arduboy.println(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(player.inv[menuCase])].name)));
     
     if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
-      player.inventory[menuCase] = storeInventory[itemSelected];
-      player.wallet -= storeInventory[itemSelected].cost;
+      player.inv[menuCase] = storeInventory[itemSelected];
+      player.wallet -= pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[itemSelected])].cost);
       menuNum = 0;
       abuff = 1;
     }  

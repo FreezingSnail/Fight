@@ -1,16 +1,16 @@
 #include "player.h"
 #include "images.h"
-#include "names.h"
 
 
 playerCharacter::playerCharacter(): actor() {
-  wallet = 5;
+  wallet = 100;
   level = 1;
   potion = 0;
   ex = 0;
   for (uint8_t x = 0; x < 5; ++x) {
-    inventory[x] = { 0, 0, 0, "EMPTY", 0 };
+    inv[x] = empty;
   }
+  
 }
 
 void playerCharacter::printStats() {
@@ -27,20 +27,20 @@ void playerCharacter::printStats() {
       arduboy.print(getStat(statSeed.totalHP));
       arduboy.println(F(" HP "));
       arduboy.print(F("Strength:"));
-      arduboy.println(getStat(statSeed.strength) + weapon.atkMod);
+      arduboy.println(getStat(statSeed.strength) + pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].atkMod));
       arduboy.print(F("Defense:"));
-      arduboy.println(getStat(statSeed.defense) + weapon.defMod);
+      arduboy.println(getStat(statSeed.defense) + pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].defMod));
       arduboy.print(F("Speed:"));
       arduboy.println(getStat(statSeed.speed));
       arduboy.print(F("Magic:"));
-      arduboy.println(getStat(statSeed.special) + weapon.spcMod);
+      arduboy.println(getStat(statSeed.special) + pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].spcMod));
       arduboy.setCursor(75, 12);
       arduboy.print(F("Lvl:"));
       arduboy.print(level);
       arduboy.print(F(" "));
       //arduboy.print(ex);
       arduboy.setCursor(75, 20);
-      arduboy.println(weapon.name);
+      arduboy.println(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].name)));
       arduboy.setCursor(75, 28);
       arduboy.print(F("Coins:"));
       arduboy.print(wallet);
@@ -65,18 +65,20 @@ void playerCharacter::printStats() {
 }
 
 void playerCharacter::equipt(uint16_t inventoryLocation){
-  weapon = { inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name, 0 };
+ // weapon = { inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name, 0 };
+ equiptedWpn = inv[inventoryLocation];
 }
 
 void playerCharacter::printInv(){
+  //pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[0])].cost);
      for( uint16_t x = 0; x < 5 ; x++){
-        arduboy.print(inventory[x].name);
+        arduboy.print(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(inv[x])].name)));
         arduboy.print(F(" a:"));
-        arduboy.print(inventory[x].atkMod);
+        arduboy.print(pgm_read_word(&weaponArray[static_cast<uint8_t>(inv[x])].atkMod));
         arduboy.print(F(" d:"));
-        arduboy.print(inventory[x].defMod);
+        arduboy.print(pgm_read_word(&weaponArray[static_cast<uint8_t>(inv[x])].defMod));
         arduboy.print(F(" s:"));
-        arduboy.println(inventory[x].spcMod);
+        arduboy.println(pgm_read_word(&weaponArray[static_cast<uint8_t>(inv[x])].spcMod));
      }
 }
 
@@ -88,24 +90,26 @@ void playerCharacter::pickClass(uint16_t type){
       name = "warrior";
       hp = getStat(statSeed.totalHP);
       bmp = warrior_bmp;
-      inventory[0] = { 1, 0, 0, "Sword", 0 };
-      weapon = inventory[0];
+      inv[0] = sword;
+      equiptedWpn = inv[0];
       break;
 
       case 1:
       name = "Tank";
-      weapon = { 0, 1, 0, "Sheild", 0} ;
       bmp = tank_bmp; 
       statSeed = { 20, 5, 10, 2, 3 };
       hp = getStat(statSeed.totalHP);
+      inv[0] = sheild;
+      equiptedWpn = inv[0];
       break;
 
       case 2:
       name = "mage";
       bmp = mage_bmp;
-      weapon = { 0, 0, 1, "Staff", 0 };
       statSeed = { 8, 5, 3, 2, 12 };
       hp = getStat(statSeed.totalHP);
+      inv[0] = staff;
+      equiptedWpn = inv[0];
       break;
     }
  }

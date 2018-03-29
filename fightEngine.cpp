@@ -1,16 +1,6 @@
-#include "gameEngine.h"
-#include "Globals.h"
-#include "actor.h"
-#include "player.h"
+#include "fightEngine.h"
 
-enum moveType {
-  attack,
-  defend,
-  special,
-  magic,
-  item,
-  skip, 
-};
+
 
 moveType playerMove;
 moveType enemyMove;
@@ -19,6 +9,18 @@ uint16_t moveChoiseMade;
 bool playerFirst;
 bool turnComplete;
 uint16_t eMoveChoise;
+
+
+
+
+Command* InputHandler::handleInput()
+{
+  if (arduboy.justPressed(A_BUTTON)) return  aButton_;
+ 
+  // Nothing pressed, so do nothing.
+  return NULL;
+}
+
 
 
 

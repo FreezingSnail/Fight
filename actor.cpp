@@ -1,6 +1,5 @@
 #include "actor.h"
 #include "images.h"
-#include "names.h"
 
 
 actor::actor() {

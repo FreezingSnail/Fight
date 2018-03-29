@@ -11,6 +11,7 @@ struct equpment {
   uint16_t cost;
 };
 
+
 struct baseStats {
   
   uint16_t totalHP;

@@ -4,7 +4,7 @@
 
 
 void setup() {
-  arduboy.begin();
+  arduboy.boot();
   arduboy.setFrameRate(30);
   arduboy.initRandomSeed();
   int  menuCase = 0;
