@@ -30,7 +30,7 @@ void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove
 
       if(agesMove == attack){
         if(trgtMove == defend){
-          target.takeDamage(agressor, (target.getStat(target.statSeed.defense)));
+          target.takeDamage(agressor, (target.getStat(pgm_read_word(&target.type->statSeed.defense))));
           
         
         }else if( trgtMove == attack){
@@ -43,7 +43,7 @@ void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove
         }
       }
       else if (agesMove == defend)
-      {          target.takeDamage(agressor, -5); 
+      {          //target.takeDamage(agressor, -5); 
       }  
       else if (agesMove == item){}//nothing
       else if (agesMove == skip){}
@@ -133,7 +133,7 @@ if(state == 0){
   }
   else if (moveChoiseMade == 1 && eMoveChoise == 1){
   //determine which moves first
-    if(plyr.getStat(plyr.statSeed.speed) > cpu.getStat(cpu.statSeed.speed)) {
+    if(plyr.getStat(pgm_read_word(&plyr.type->statSeed.speed)) > cpu.getStat(pgm_read_word(&cpu.type->statSeed.speed))) {
     playerFirst = true;
     }
     else{ playerFirst = false;}

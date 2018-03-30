@@ -4,6 +4,6 @@ Arduboy2 arduboy;
 GameStatus gameStatus;
 int menuCase;
 
-uint16_t turnState;
-uint16_t menuNum;
-uint16_t state = 0;
+uint8_t turnState;
+uint8_t menuNum;
+uint8_t state = 0;

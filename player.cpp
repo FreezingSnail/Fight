@@ -1,15 +1,19 @@
 #include "player.h"
-#include "images.h"
 
 
-playerCharacter::playerCharacter(): actor() {
-  wallet = 100;
+playerCharacter::playerCharacter(const actorType & typeActor): actor() {
+  wallet = 5;
   level = 1;
   potion = 0;
   ex = 0;
+  type = &typeActor;
+  hp = getStat(pgm_read_word(&type->statSeed.totalHP));
+  equiptedWpn = (pgm_read_word(&type->weapon));
+
   for (uint8_t x = 0; x < 5; ++x) {
     inv[x] = empty;
   }
+  inv[0] = (pgm_read_word(&type->weapon));
   
 }
 
@@ -21,19 +25,19 @@ void playerCharacter::printStats() {
     if( menuCase == 0){
     
       arduboy.setCursor(0, 12);
-      arduboy.println(name);
+      arduboy.println(FlashString(pgm_read_word(&type->name)));
       arduboy.print(hp);
       arduboy.print(" / ");
-      arduboy.print(getStat(statSeed.totalHP));
+      arduboy.print(getStat(pgm_read_word(&type->statSeed.totalHP)));
       arduboy.println(F(" HP "));
       arduboy.print(F("Strength:"));
-      arduboy.println(getStat(statSeed.strength) + pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].atkMod));
+      arduboy.println(getStat(pgm_read_word(&type->statSeed.strength)) + pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].atkMod));
       arduboy.print(F("Defense:"));
-      arduboy.println(getStat(statSeed.defense) + pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].defMod));
+      arduboy.println(getStat(pgm_read_word(&type->statSeed.defense)) + pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].defMod));
       arduboy.print(F("Speed:"));
-      arduboy.println(getStat(statSeed.speed));
+      arduboy.println(getStat(pgm_read_word(&type->statSeed.speed)));
       arduboy.print(F("Magic:"));
-      arduboy.println(getStat(statSeed.special) + pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].spcMod));
+      arduboy.println(/*getStat(pgm_read_word(&type->statSeed.special)) +*/ pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].spcMod));
       arduboy.setCursor(75, 12);
       arduboy.print(F("Lvl:"));
       arduboy.print(level);
@@ -44,7 +48,7 @@ void playerCharacter::printStats() {
       arduboy.setCursor(75, 28);
       arduboy.print(F("Coins:"));
       arduboy.print(wallet);
-      arduboy.drawBitmap(100, 40, bmp, 20, 20, WHITE);
+      arduboy.drawBitmap(100, 40, pgm_read_word(&type->bmp), 20, 20, WHITE);
       if (potion == 1){
         arduboy.drawBitmap( 80, 40, potion_bmp, 8,8, WHITE);
       }
@@ -65,7 +69,6 @@ void playerCharacter::printStats() {
 }
 
 void playerCharacter::equipt(uint16_t inventoryLocation){
- // weapon = { inventory[inventoryLocation].atkMod, inventory[inventoryLocation].defMod, inventory[inventoryLocation].spcMod, inventory[inventoryLocation].name, 0 };
  equiptedWpn = inv[inventoryLocation];
 }
 
@@ -82,37 +85,6 @@ void playerCharacter::printInv(){
      }
 }
 
-void playerCharacter::pickClass(uint16_t type){
- 
-    switch(type){
-      case 0:
-      statSeed = { 13, 13, 6, 6, 2 };
-      name = "warrior";
-      hp = getStat(statSeed.totalHP);
-      bmp = warrior_bmp;
-      inv[0] = sword;
-      equiptedWpn = inv[0];
-      break;
-
-      case 1:
-      name = "Tank";
-      bmp = tank_bmp; 
-      statSeed = { 20, 5, 10, 2, 3 };
-      hp = getStat(statSeed.totalHP);
-      inv[0] = sheild;
-      equiptedWpn = inv[0];
-      break;
-
-      case 2:
-      name = "mage";
-      bmp = mage_bmp;
-      statSeed = { 8, 5, 3, 2, 12 };
-      hp = getStat(statSeed.totalHP);
-      inv[0] = staff;
-      equiptedWpn = inv[0];
-      break;
-    }
- }
 
 //exp to level up
 //3*(B1^2)
@@ -127,11 +99,11 @@ void playerCharacter::checkLvlUp(){
 //restores half of your health
 void playerCharacter::usePotion(){
   potion--;
-  if( hp < (getStat(statSeed.totalHP)/2)){ 
-    hp += (getStat(statSeed.totalHP)/2);
+  if( hp < ((getStat(pgm_read_word(&type->statSeed.totalHP)))/2)){ 
+    hp += (getStat(pgm_read_word(&type->statSeed.totalHP)))/2;
   }
   else{
-    hp = getStat(statSeed.totalHP);
+    hp = getStat(pgm_read_word(&type->statSeed.totalHP));
   }
 }
 

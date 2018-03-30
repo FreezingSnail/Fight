@@ -10,7 +10,7 @@ void Intro();
 void MainMenu();
 void fight();
 void StatMenu();
-void BattleScene(actor& opponent);
+void BattleScene(enemy& opponent);
 void VictoryScreen();
 void Store();
 void FailScreen();
@@ -19,6 +19,6 @@ void generateMob();
 void drawBoarder();
 void drawPlayerInfo();
 void drawFightBoarder();
-void setMob(const char * nm, equpment wpn, baseStats seed, const byte * sprite, int lvl);
+void setMob(const char * nm, weaponId wpn, baseStats seed, const byte * sprite, int lvl);
 
 #endif // gameEngine_h

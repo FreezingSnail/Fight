@@ -2,26 +2,26 @@
 #include "images.h"
 
 
-actor::actor() {
+actor::actor()  {
   
-  name;
   hp;
-  bmp;
-  equpment weapon;
+  weapon;
   level=1;
-  baseStats statSeed;
+  type;
 }
   
  
 
  
+
 uint16_t actor::damage(){
-    return (getStat(statSeed.strength) / 2);
+    return (getStat(pgm_read_word(&type->statSeed.strength)) / 2);
 }
+
 
 void actor::takeDamage(actor attacker, uint16_t modifier){
   
-     int damageval = (((attacker.damage())+attacker.weapon.atkMod) - ((getStat(statSeed.defense)/2)-weapon.defMod) - modifier);
+     int damageval = ((((attacker.damage())/*+attacker.weapon.atkMod*/) - ((getStat(pgm_read_word(&type->statSeed.defense)))/2)/*-weapon.defMod*/) - modifier);
       if (damageval > 0){
         hp -= damageval;
       }
@@ -30,10 +30,9 @@ void actor::takeDamage(actor attacker, uint16_t modifier){
       }
 }
 
-
 void actor::takeSpecial(actor attacker){
   
-  int damageval = (((getStat(attacker.statSeed.special)/2)+weapon.spcMod-((getStat(statSeed.special)/2)-weapon.spcMod) ));
+  int damageval = (((getStat(pgm_read_word(pgm_read_word(&attacker.type->statSeed.special))))/2)/*+weapon.spcMod*/-((getStat(pgm_read_word(&type->statSeed.special)))/2)/*-weapon.spcMod*/) ;
       if (damageval > 0){
         hp -= damageval;
       }
@@ -43,17 +42,17 @@ void actor::takeSpecial(actor attacker){
 
 void actor::levelUp(){
   level++;
-  hp = statSeed.totalHP;
-
+  hp = getStat(pgm_read_word(&type->statSeed.totalHP));
   
   
 }
 
-uint16_t actor::getStat(uint16_t stat){
+uint16_t actor::getStat(uint8_t stat){
   //=(((3 * B1))/4)+1
   return ((((stat* level)/4)) +level);
   
 }
+
 
 uint16_t actor::expDrop(){
   return level*2;

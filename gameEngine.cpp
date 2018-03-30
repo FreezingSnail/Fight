@@ -9,8 +9,8 @@
 
 //INITIALIZE ACTORS
 //actor(char* nm, int h, int str, int def, int spd, int spc, byte BMP, equpment Item);
-playerCharacter player = playerCharacter();
-enemy mob = enemy("troll", {4, 2, 0, "Club"}, {30, 20, 6, 4,},  troll_bmp, 4);
+playerCharacter player = playerCharacter(actorList[0]);
+enemy mob = enemy(1, {"name", {8, 8, 5, 4, 0}, sword, slime_bmp}); //= enemy("troll", club, {30, 20, 6, 4,},  troll_bmp, 4);
 //actor boss = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
 //enemy slime = enemy("slime", {3, 0, 3, "slime ball"}, {25, 8, 8, 6, 8}, slime_bmp); 
  //actor troll = actor("troll", 30, 20, 6, 2, 4, warrior_bmp, {4, 2, 0, "Club", 0}); 
@@ -27,18 +27,17 @@ const weaponId storeInventory[] = { kleaver,
 
 //OTHER INTS FOR MENU LOCATIONS
 
-uint16_t abuff = 0;
-uint16_t equiptMenu = 0;
+uint8_t abuff = 0;
+uint8_t equiptMenu = 0;
 bool infight = false;
-uint16_t itemSelected;
-uint16_t arenaLvl = 0;      
-uint16_t inbossfight =  0;
-int mobHP;
+uint8_t itemSelected;
+uint8_t arenaLvl = 0;      
+uint8_t inbossfight =  0;
 //int liveCounter = 5;
 
 //CHARACTER SELECTION
 void gameStart(){
-  player = playerCharacter();
+  player = playerCharacter(actorList[0]);
   arduboy.clear();
   drawBoarder();
   arduboy.setCursor(4, 3);
@@ -81,17 +80,21 @@ void gameStart(){
       switch (menuCase) {
 
       case 0:
-      player.pickClass(0);
+      player = playerCharacter(actorList[0]);
+      //player.pickClass(0);
+
       menuCase = 0;
       gameStatus = menu;
       break;
       case 1:
-      player.pickClass(1);
+      player = playerCharacter(actorList[1]);
+     // player.pickClass(1);
       menuCase = 0;
       gameStatus = menu;
       break;
       case 2:
-      player.pickClass(2);
+     // player.pickClass(2);
+      player = playerCharacter(actorList[2]);
       menuCase = 0;
       gameStatus = menu;
       break;
@@ -108,10 +111,7 @@ void  Intro(){
   arduboy.drawBitmap(0, 0, splashScreen, 128, 64, WHITE);
   //ADD GAME SPLASH SCREEN
   arduboy.setCursor(25, 0);
- // arduboy.print(F("Hit b to start"));
- //int  katanacost = pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[0])].cost);
-//  arduboy.print(katanacost);
-  //arduboy.print("testing");
+  arduboy.print(F("Hit b to start"));
   //ADD HELP SCREEN
   if (arduboy.justPressed(B_BUTTON)){
     gameStatus = charSelect;
@@ -250,27 +250,27 @@ void bossFight(){
       inbossfight = 1;
     
     if(arenaLvl == 0){
-      setMob("slime", {3, 0, 3, "slime ball"}, {28, 8, 10, 6, 8}, slime_bmp, 3);
+      //setMob("slime", club /*{3, 0, 3, "slime ball"}*/, {28, 8, 10, 6, 8}, slime_bmp, 3);
       //mob.statSeed = {25, 8, 8, 6, 8};
       //mob.name = "Slime";
-      mob.bmp = slime_bmp;
+      //mob.bmp = slime_bmp;
       //mob.weapon = {3, 0, 3, "slime ball"};
       //mob.level = 3;
     }
     else if (arenaLvl == 1){
-      setMob("troll", {4, 2, 0, "Club"}, {20, 15, 10, 7, 8},  troll_bmp, 4);
-      mob.bmp = troll_bmp;
+      //setMob("troll", club /*{4, 2, 0, "Club"}*/, {20, 15, 10, 7, 8},  troll_bmp, 4);
+      //mob.bmp = troll_bmp;
       //mob.name = "Troll";
      // mob.level = 2;
     }
     else if (arenaLvl == 2){
-      setMob("ogre", {6, 0, 0, "Ogre Claws"}, {20, 20, 15, 5, 0}, ogre_bmp, 5);
-      mob.bmp = ogre_bmp;
+      //setMob("ogre", club /*{6, 0, 0, "Ogre Claws"}*/, {20, 20, 15, 5, 0}, ogre_bmp, 5);
+     // mob.bmp = ogre_bmp;
      // mob.name = "Ogre";
     }
      else if (arenaLvl == 3){
-      setMob("Master", {15, 0, 0, "Schimtar"}, {20, 15, 15, 10, 10}, ogre_bmp, 6);
-      mob.bmp = arenaMaster_bmp;
+     // setMob("Master", club /*{15, 0, 0, "Schimtar"}*/, {20, 15, 15, 10, 10}, ogre_bmp, 6);
+//      mob.bmp = arenaMaster_bmp;
      // mob.name = "Master";
      }
     }
@@ -383,7 +383,7 @@ void FailScreen(){
     
       gameStatus = menu;
       infight = false; 
-      player.hp = player.getStat(player.statSeed.totalHP);
+      player.hp = player.getStat(pgm_read_word(&player.type->statSeed.totalHP));
       if(inbossfight == 1){
         inbossfight = 0;}
         
@@ -397,18 +397,19 @@ void FailScreen(){
 }
 
 //FIGHT LOOP
-void BattleScene(actor& opponent) {
+void BattleScene(enemy& opponent) {
  if (player.hp >0){
   if (opponent.hp >0){
     arduboy.clear();
     arduboy.setCursor(6, 4);
-    arduboy.print(opponent.name);
+    arduboy.print(FlashString(pgm_read_word(&opponent.type->name)));
+    //arduboy.print(opponent.getName());
     arduboy.setCursor(6, 14);
     arduboy.print(F("hp: "));
     arduboy.println(opponent.hp);
    // arduboy.drawLine(6, 14, 69, 14, WHITE);
     arduboy.drawBitmap(5, 27, battleBKG, 56,32);
-    arduboy.drawBitmap(22, 29, mob.bmp, 20, 20, WHITE);
+    arduboy.drawBitmap(22, 29, (pgm_read_word(&opponent.type->bmp)), 20, 20, WHITE);
     
 
    // arduboy.drawLine(64, 1, 64, 64);
@@ -460,7 +461,7 @@ void Store() {
       arduboy.print(F("Buy new equiptment"));
       break;
       case 1:
-      if (player.hp < player.getStat(player.statSeed.totalHP)){
+      if (player.hp < player.getStat(player.type->statSeed.totalHP)){
         arduboy.print(F("HEAL: 1 coin"));
       }else{
         arduboy.print(F("You need not heal"));
@@ -486,8 +487,8 @@ void Store() {
       menuNum = 1;
       break;
       case 1:
-      if(player.wallet > 0 && player.hp < player.getStat(player.statSeed.totalHP)){
-      player.hp = player.getStat(player.statSeed.totalHP);
+      if(player.wallet > 0 && player.hp < player.getStat(player.type->statSeed.totalHP)){
+      player.hp = player.getStat(player.type->statSeed.totalHP);
       player.wallet -=1;
       }
       break;
@@ -560,38 +561,9 @@ void generateMob(){
   
  int moblvl= (player.level-1) + (rand() %(3));
  if(moblvl < 1){moblvl=1;}
-  
-  switch(x){
-      case 0:
-      setMob("", {1, 0, 0}, {8, 8, 5, 4, 0}, slime_bmp, moblvl);
-      mob.name = "Knight";
-      mob.bmp = warrior_bmp;
-      break;
-      
-      case 1:
-      setMob("", {0, 1, 0}, {10, 4, 7, 2, 2}, slime_bmp, moblvl);
-      mob.name = "Tank";
-      mob.bmp = tank_bmp;
-      break;
-
-      case 2:
-      setMob("", {0, 0, 1}, {8, 1, 2, 8, 8}, mage_bmp, moblvl);
-      mob.name = "Warlock";
-      mob.bmp = mage_bmp;
-      break;
-
-      case 3:
-      setMob("", {1, 0, 1}, {5, 7, 4, 8, 1}, mage_bmp, moblvl);
-      mob.name = "Spider";
-      mob.bmp = spider_bmp;
-      break;
-
-      case 4:
-      setMob("", {0, 1, 1}, {7, 8, 6, 1, 3}, mage_bmp, moblvl);
-      mob.name = "Orc";
-      mob.bmp = orc_bmp;
-      break;
-    }
+ mob = enemy(moblvl, mobList[x]); 
+ 
+    
 }
 
 void drawBoarder(){
@@ -613,11 +585,11 @@ void drawPlayerInfo(){
     arduboy.setCursor(67, 36);
     arduboy.print(player.hp);
     arduboy.print(F("/"));
-    arduboy.print(player.getStat(player.statSeed.totalHP));
+    arduboy.print(player.getStat(pgm_read_word(&player.type->statSeed.totalHP)));
     arduboy.print(F("HP"));
    // arduboy.drawLine(56, 60, 118, 60, WHITE);
 
-    arduboy.drawBitmap(100, 6, player.bmp, 20, 20, WHITE);
+    arduboy.drawBitmap(100, 6, pgm_read_word(&player.type->bmp), 20, 20, WHITE);
     arduboy.setCursor(0, 50);
 
     arduboy.drawLine(67, 48, 122, 48, WHITE);
@@ -645,13 +617,13 @@ void drawPlayerInfo(){
 void drawFightBoarder(){
     arduboy.drawBitmap(0,0, battleMap, 128, 64);
 }
-
-void setMob(const char * nm, equpment wpn, baseStats seed, const byte * sprite, int lvl){
+/*
+void setMob(const char * nm, weaponId wpn, baseStats seed, const byte * sprite, int lvl){
       mob.statSeed = seed;
       mob.name = nm;
       mob.bmp = sprite;
       mob.weapon = wpn;
       mob.level = lvl;
       mob.hp = mob.getStat(mob.statSeed.totalHP);
-}
+}*/
 

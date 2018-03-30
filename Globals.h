@@ -3,10 +3,10 @@
 #include <Arduboy2.h>
 
 extern Arduboy2 arduboy;
-extern uint16_t abuff;
-extern uint16_t turnState;
-extern uint16_t menuNum;
-extern uint16_t state;
+extern uint8_t abuff;
+extern uint8_t turnState;
+extern uint8_t menuNum;
+extern uint8_t state;
 
 enum GameStatus {
   intro,

@@ -1,15 +1,11 @@
 #include "enemy.h"
-#include "images.h"
+#include "actor.h"
 
-enemy::enemy(const char * nm, equpment wpn, baseStats seed, const uint8_t * sprite, int lvl){
-  name = nm;
-  hp = getStat(seed.totalHP);
-  bmp = sprite;
-  equpment weapon = wpn;
+enemy::enemy( uint8_t lvl, const actorType & typeActor){
   level = lvl;
-  baseStats statSeed = seed;
+  type = &typeActor;
+  hp = getStat(pgm_read_word(type->statSeed.totalHP));
 }
-
 
 
 
