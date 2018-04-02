@@ -1,21 +1,9 @@
 #include "gameEngine.h"
-#include "Globals.h"
-#include "actor.h"
-#include "fightEngine.h"
-#include "images.h"
-#include "player.h"
-#include "enemy.h"
-#include "weapons.h"
+
 
 //INITIALIZE ACTORS
-//actor(char* nm, int h, int str, int def, int spd, int spc, byte BMP, equpment Item);
 playerCharacter player = playerCharacter(actorList[0]);
-enemy mob = enemy(1, {"name", {8, 8, 5, 4, 0}, sword, slime_bmp}); //= enemy("troll", club, {30, 20, 6, 4,},  troll_bmp, 4);
-//actor boss = actor("null", 0, 0, 0, 0, 0, warrior_bmp, {0, 0, 0, "null", 0});
-//enemy slime = enemy("slime", {3, 0, 3, "slime ball"}, {25, 8, 8, 6, 8}, slime_bmp); 
- //actor troll = actor("troll", 30, 20, 6, 2, 4, warrior_bmp, {4, 2, 0, "Club", 0}); 
- //actor ogre = actor("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0}); 
-//playerCharacter test = playerCharacter("ogre", 40, 20, 15, 4, 8, warrior_bmp, {6, 0, 0, "Ogre Claws", 0});
+enemy mob = enemy(1, {"name", {8, 8, 5, 4, 0}, sword, slime_bmp, {}, {Swipe}});
 
 //STORE INVENTORY ARRA
 const weaponId storeInventory[] = { kleaver,
@@ -24,6 +12,7 @@ const weaponId storeInventory[] = { kleaver,
   katana,
   ironShield,
   magnusRod, }; 
+
 
 //OTHER INTS FOR MENU LOCATIONS
 
@@ -56,8 +45,7 @@ void gameStart(){
       arduboy.println(F("Warrior"));
       arduboy.drawBitmap(4, 40, warrior_bmp, 20, 20, WHITE);
       arduboy.setCursor(04, 25);
-      arduboy.print(F("Strong Attack"));
-      
+      arduboy.print(F("Strong Attack"));     
       break;
       case 1:
       arduboy.println(F("Tank"));
@@ -119,7 +107,7 @@ void  Intro(){
   }
 }
 
-//MAIN MENU AND ROOM SELECTION
+//MAIN MENU ROOM SELECTION
 void MainMenu() {
   
   arduboy.clear();
@@ -240,7 +228,7 @@ void fight() {
   
   
 }
-
+//initializge boss fight
 void bossFight(){
   if(infight == false){
       arduboy.clear();
@@ -250,28 +238,18 @@ void bossFight(){
       inbossfight = 1;
     
     if(arenaLvl == 0){
-      //setMob("slime", club /*{3, 0, 3, "slime ball"}*/, {28, 8, 10, 6, 8}, slime_bmp, 3);
-      //mob.statSeed = {25, 8, 8, 6, 8};
-      //mob.name = "Slime";
-      //mob.bmp = slime_bmp;
-      //mob.weapon = {3, 0, 3, "slime ball"};
-      //mob.level = 3;
+       mob = enemy(3, mobList[5]);
     }
     else if (arenaLvl == 1){
-      //setMob("troll", club /*{4, 2, 0, "Club"}*/, {20, 15, 10, 7, 8},  troll_bmp, 4);
-      //mob.bmp = troll_bmp;
-      //mob.name = "Troll";
-     // mob.level = 2;
+       mob = enemy(4, mobList[6]);
+
     }
     else if (arenaLvl == 2){
-      //setMob("ogre", club /*{6, 0, 0, "Ogre Claws"}*/, {20, 20, 15, 5, 0}, ogre_bmp, 5);
-     // mob.bmp = ogre_bmp;
-     // mob.name = "Ogre";
+       mob = enemy(5, mobList[7]);
+
     }
      else if (arenaLvl == 3){
-     // setMob("Master", club /*{15, 0, 0, "Schimtar"}*/, {20, 15, 15, 10, 10}, ogre_bmp, 6);
-//      mob.bmp = arenaMaster_bmp;
-     // mob.name = "Master";
+       mob = enemy(6, mobList[8]);
      }
     }
   
@@ -433,126 +411,12 @@ void BattleScene(enemy& opponent) {
 }
 
 //PURCHASE EQUIPTMENT/HEAL
-void Store() {
-
-  arduboy.clear();
-  arduboy.drawBitmap(0,0, storeScreen, 128, 64, WHITE);
-  arduboy.setCursor(8, 41);
-  arduboy.print("What'll have ye?");
- // arduboy.print(F("Store"));
-  //arduboy.drawLine(0, 10, 130, 10, WHITE);
-  arduboy.setCursor(5, 54);
-
-  //scroll menu
+void StoreRoom() {
 
 
-    if(arduboy.pressed(B_BUTTON)) {
-    gameStatus = menu;
-    menuCase = 0;
-    }
+Store(storeInventory, player);
 
-    if(menuNum == 0){
-    if (menuCase > 2){ menuCase = 0;}
-    if (menuCase < 0){menuCase = 2;} 
 
-    switch (menuCase) {
-
-      case 0:
-      arduboy.print(F("Buy new equiptment"));
-      break;
-      case 1:
-      if (player.hp < player.getStat(player.type->statSeed.totalHP)){
-        arduboy.print(F("HEAL: 1 coin"));
-      }else{
-        arduboy.print(F("You need not heal"));
-      }
-      break;
-      case 2:
-      if (player.potion >= 0 && player.potion < 2 && player.wallet > 2){
-          arduboy.print(F("Buy a Potion? 3 Coin"));
-      }else if (player.wallet < 3){
-        arduboy.print(F("ye short on coin"));
-      }
-      else {
-        arduboy.print(F("Ye potion bag is ful"));
-      }
-      break;
-   
-    }
-
-     if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
-      abuff = 1;
-      switch (menuCase) {
-       case 0:
-      menuNum = 1;
-      break;
-      case 1:
-      if(player.wallet > 0 && player.hp < player.getStat(player.type->statSeed.totalHP)){
-      player.hp = player.getStat(player.type->statSeed.totalHP);
-      player.wallet -=1;
-      }
-      break;
-      case 2:
-      if (player.potion >= 0 && player.potion <= 2 && player.wallet > 2){
-          player.potion++;
-          player.wallet -=3;
-      }
-      break;
-      }
-      
-    }
-   }
-
-//display store inventory
-  if(menuNum == 1){
-    if (menuCase > 4){ menuCase = 0;}
-    if (menuCase < 0){menuCase = 4;} 
-   
-    arduboy.clear();
-    arduboy.setCursor(8, 41);
-    arduboy.println(F("Here's what ye got"));
-    arduboy.drawBitmap(0,0, storeScreen, 128, 64, WHITE);
-    arduboy.setCursor(5, 54);
-    arduboy.print(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].name)));
-    arduboy.print(F(":"));
-    arduboy.print(pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].cost));
-    arduboy.println(F("coins"));
-
-   // if (player.wallet < weaponArray[menuCase].cost){
-     // arduboy.setCursor(8, 41);
-      //arduboy.print(F("Ye Broke"));
-    //}
-
-      if( arduboy.pressed(A_BUTTON) && abuff == 0 && player.wallet >= pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].cost)){
-        abuff = 1;
-        itemSelected = menuCase;
-        menuNum = 2;
-      }
-   }
-
-//pick slot to place item   
-  if(menuNum == 2){
-    if (menuCase > 4){ menuCase = 0;}
-    if (menuCase < 0){menuCase = 4;} 
-  
-    arduboy.clear();
-    arduboy.drawBitmap(0,0, storeScreen, 128, 64, WHITE);
-    arduboy.setCursor(8, 41);
-    arduboy.println(F("Select inv slot"));
-    arduboy.setCursor(5, 54);
-    arduboy.print(F("slot #: "));
-    arduboy.print(menuCase);
-    arduboy.print(" ");
-    arduboy.println(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(player.inv[menuCase])].name)));
-    
-    if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
-      player.inv[menuCase] = storeInventory[itemSelected];
-      player.wallet -= pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[itemSelected])].cost);
-      menuNum = 0;
-      abuff = 1;
-    }  
-  }
-    
       
 }
 
@@ -578,9 +442,8 @@ void drawBoarder(){
     arduboy.drawLine(3, 60, 1, 62, WHITE);
 }
 
-void drawPlayerInfo(){
-  //arduboy.drawLine(64, 1, 64, 64);
 
+void drawPlayerInfo(){
     
     arduboy.setCursor(67, 36);
     arduboy.print(player.hp);
@@ -617,13 +480,151 @@ void drawPlayerInfo(){
 void drawFightBoarder(){
     arduboy.drawBitmap(0,0, battleMap, 128, 64);
 }
-/*
-void setMob(const char * nm, weaponId wpn, baseStats seed, const byte * sprite, int lvl){
-      mob.statSeed = seed;
-      mob.name = nm;
-      mob.bmp = sprite;
-      mob.weapon = wpn;
-      mob.level = lvl;
-      mob.hp = mob.getStat(mob.statSeed.totalHP);
-}*/
+
+
+
+void Store( weaponId storeInventory[], playerCharacter & player) {
+
+  arduboy.clear();
+  arduboy.drawBitmap(0, 0, storeScreen, 128, 64, WHITE);
+  arduboy.setCursor(8, 41);
+  arduboy.print("What'll have ye?");
+  arduboy.setCursor(5, 54);
+
+  //scroll menu
+
+
+  if (arduboy.pressed(B_BUTTON)) {
+    gameStatus = menu;
+    menuCase = 0;
+  }
+
+  if (menuNum == 0) {
+    if (menuCase > 2) {
+      menuCase = 0;
+    }
+    if (menuCase < 0) {
+      menuCase = 2;
+    }
+
+    switch (menuCase) {
+
+      case 0:
+        arduboy.print(F("Buy new equiptment"));
+        break;
+      case 1:
+        if (player.hp < player.getStat(player.type->statSeed.totalHP)) {
+          arduboy.print(F("HEAL: 1 coin"));
+        } else {
+          arduboy.print(F("You need not heal"));
+        }
+        break;
+      case 2:
+        if (player.potion >= 0 && player.potion < 2 && player.wallet > 2) {
+          arduboy.print(F("Buy a Potion? 3 Coin"));
+        } else if (player.wallet < 3) {
+          arduboy.print(F("ye short on coin"));
+        }
+        else {
+          arduboy.print(F("Ye potion bag is ful"));
+        }
+        break;
+
+    }
+
+    if ( arduboy.pressed(A_BUTTON) == true and abuff == 0) {
+      abuff = 1;
+      switch (menuCase) {
+        case 0:
+          menuNum = 1;
+          break;
+        case 1:
+          if (player.wallet > 0 && player.hp < player.getStat(player.type->statSeed.totalHP)) {
+            player.hp = player.getStat(player.type->statSeed.totalHP);
+            player.wallet -= 1;
+          }
+          break;
+        case 2:
+          if (player.potion >= 0 && player.potion <= 2 && player.wallet > 2) {
+            player.potion++;
+            player.wallet -= 3;
+          }
+          break;
+      }
+
+    }
+  }
+
+  //display store inventory
+  if (menuNum == 1) {
+      browseInventory(storeInventory, player);
+  }
+
+  //pick slot to place item
+  if (menuNum == 2) {
+    placeInInv(player, itemSelected, storeInventory);
+  }
+}
+
+
+//display a store inventory
+void browseInventory( weaponId storeInventory[], playerCharacter & player) {
+  if (menuCase > 4) {
+    menuCase = 0;
+  }
+  if (menuCase < 0) {
+    menuCase = 4;
+  }
+
+  arduboy.clear();
+  arduboy.setCursor(8, 41);
+  arduboy.println(F("Here's what ye got"));
+  arduboy.drawBitmap(0, 0, storeScreen, 128, 64, WHITE);
+  arduboy.setCursor(5, 54);
+  arduboy.print(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].name)));
+  arduboy.print(F(":"));
+  arduboy.print(pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].cost));
+  arduboy.println(F("coins"));
+
+   if (player.wallet < weaponArray[menuCase].cost){
+   arduboy.setCursor(8, 41);
+  arduboy.print(F("Ye Broke"));
+  }
+
+      if( arduboy.pressed(A_BUTTON) && abuff == 0 && player.wallet >= pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[menuCase])].cost)){
+    abuff = 1;
+    uint8_t itemSelected = menuCase;
+    menuNum = 2;
+   }
+}
+
+// select inv slot for new weapon
+void placeInInv(playerCharacter & player, uint8_t itemSelected, const weaponId storeInventory[]) {
+  //pick slot to place item
+
+  if (menuCase > 4) {
+    menuCase = 0;
+  }
+  if (menuCase < 0) {
+    menuCase = 4;
+  }
+
+  arduboy.clear();
+  arduboy.drawBitmap(0, 0, storeScreen, 128, 64, WHITE);
+  arduboy.setCursor(8, 41);
+  arduboy.println(F("Select inv slot"));
+  arduboy.setCursor(5, 54);
+  arduboy.print(F("slot #: "));
+  arduboy.print(menuCase);
+  arduboy.print(" ");
+  arduboy.println(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(player.inv[menuCase])].name)));
+
+  if ( arduboy.pressed(A_BUTTON) == true and abuff == 0) {
+         player.inv[menuCase] = storeInventory[itemSelected];
+          player.wallet -= pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[itemSelected])].cost);
+    menuNum = 0;
+    abuff = 1;
+  }
+
+}
 

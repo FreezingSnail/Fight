@@ -9,17 +9,7 @@ uint16_t moveChoiseMade;
 bool playerFirst;
 bool turnComplete;
 uint16_t eMoveChoise;
-
-
-
-
-Command* InputHandler::handleInput()
-{
-  if (arduboy.justPressed(A_BUTTON)) return  aButton_;
- 
-  // Nothing pressed, so do nothing.
-  return NULL;
-}
+bool playerTurn;
 
 
 
@@ -38,14 +28,17 @@ void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove
           
         }
         else{ //magic/item use results in more damage taken
-          target.takeDamage(agressor, 2); 
+          target.takeDamage(agressor, 0); 
               
         }
       }
       else if (agesMove == defend)
       {          //target.takeDamage(agressor, -5); 
       }  
-      else if (agesMove == item){}//nothing
+      else if (agesMove == item){
+     // if (agressor.potion > 0){
+      //agressor.usePotion();
+      }//nothing
       else if (agesMove == skip){}
       else if (agesMove == special){
         
@@ -61,75 +54,13 @@ void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove
 void Engagement(playerCharacter& plyr, actor& cpu){
 if(state == 0){
 //recieve player input
-  if(moveChoiseMade == 0){
-    turnComplete = false;
-    if (menuCase > 3){ menuCase = 0;}
-    if (menuCase < 0){menuCase = 3;} 
-
-    switch (menuCase) {
-
-      case 0:
-      arduboy.print(F("Attack"));
-      break;
-      case 1:
-      arduboy.print(F("Defend"));
-      break;
-      case 2:
-      arduboy.print(F("Magic"));
-      break;
-      case 3:
-      arduboy.print(F("Potion"));
-      break;
-   
-    }
-
-
-   if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
-      abuff = 1;
-      switch (menuCase) {
-
-      case 0:
-      playerMove = attack;
-      moveChoiseMade = 1;
-      break;
-      case 1:
-      playerMove = defend;
-      moveChoiseMade = 1;
-      break;
-      case 2:
-      playerMove = magic;
-      moveChoiseMade = 1;
-      break;
-      case 3:
-      if (plyr.potion > 0){
-      plyr.usePotion();
-      playerMove = item;
-      moveChoiseMade = 1;
-      }
-      break;
-    }
-   }
-
+if(moveChoiseMade == 0){
+  
+  getPlayerMove();
 
 // get cpu move
-
-  uint16_t cpuAtkRand = rand() %3;
-
-  switch (cpuAtkRand) {
-
-      case 0:
-      enemyMove = attack;
-      eMoveChoise = 1;
-      break;
-      case 1:
-      enemyMove = defend;
-      eMoveChoise = 1;
-      break;
-      case 2:
-      enemyMove = special;
-      eMoveChoise = 1;
-      break;
-    }
+  getCPUMove();
+  
   }
   else if (moveChoiseMade == 1 && eMoveChoise == 1){
   //determine which moves first
@@ -204,3 +135,75 @@ else if(state == 1){
 
 
 
+void getPlayerMove(){
+    
+    turnComplete = false;
+    if (menuCase > 3){ menuCase = 0;}
+    if (menuCase < 0){menuCase = 3;} 
+
+    switch (menuCase) {
+
+      case 0:
+      arduboy.print(F("Attack"));
+      break;
+      case 1:
+      arduboy.print(F("Defend"));
+      break;
+      case 2:
+      arduboy.print(F("Magic"));
+      break;
+      case 3:
+      arduboy.print(F("Potion"));
+      break;
+   
+    }
+
+
+   if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
+      abuff = 1;
+      switch (menuCase) {
+
+      case 0:
+      playerMove = attack;
+      moveChoiseMade = 1;
+      break;
+      case 1:
+      playerMove = defend;
+      moveChoiseMade = 1;
+      break;
+      case 2:
+      playerMove = magic;
+      moveChoiseMade = 1;
+      break;
+      case 3:
+      playerMove = item;
+      moveChoiseMade = 1;
+      
+      break;
+    }
+   }
+    
+}
+
+void getCPUMove(){
+  uint16_t cpuAtkRand = rand() %3;
+
+  switch (cpuAtkRand) {
+
+      case 0:
+      enemyMove = attack;
+      eMoveChoise = 1;
+      break;
+      case 1:
+      enemyMove = defend;
+      eMoveChoise = 1;
+      break;
+      case 2:
+      enemyMove = special;
+      eMoveChoise = 1;
+      break;
+    }
+}
+
+
+void selectAttack

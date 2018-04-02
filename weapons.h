@@ -22,6 +22,7 @@ enum weaponId : uint8_t {
   magnusRod,
   club,
   };
+
   
 const char PROGMEM WpnEmpty[] = "Empty";
 const char PROGMEM WpnNmSword[] = "Sword";

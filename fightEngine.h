@@ -4,15 +4,7 @@
 #include "Globals.h"
 #include "actor.h"
 #include "player.h"
-
-enum moveType {
-  attack,
-  defend,
-  special,
-  magic,
-  item,
-  skip, 
-};
+#include "attacks.h"
 
 class Command
 {
@@ -46,5 +38,10 @@ private:
 
 void Engagement(playerCharacter& plyr, actor& cpu);
 void engage(actor& agressor, actor& target, moveType agresMove, moveType trgtMove);  
+void getPlayerMove();
+void getCPUMove();
+void selectAttack();
+void selectMagic();
+
 
 #endif // fightEngine_h

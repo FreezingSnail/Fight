@@ -1,24 +1,25 @@
 #include "actor.h"
-#include "images.h"
 
 
 actor::actor()  {
   
   hp;
+  mp;
   weapon;
   level=1;
   type;
 }
   
  
-
  
-
+//return half of strength stat
 uint16_t actor::damage(){
     return (getStat(pgm_read_word(&type->statSeed.strength)) / 2);
 }
 
 
+
+//need to fix weapon modifiers
 void actor::takeDamage(actor attacker, uint16_t modifier){
   
      int damageval = ((((attacker.damage())/*+attacker.weapon.atkMod*/) - ((getStat(pgm_read_word(&type->statSeed.defense)))/2)/*-weapon.defMod*/) - modifier);
@@ -39,6 +40,7 @@ void actor::takeSpecial(actor attacker){
       else{
       }
 }
+
 
 void actor::levelUp(){
   level++;

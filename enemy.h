@@ -37,15 +37,15 @@ const char PROGMEM mobNmMaster[] = "Master";
 
 
 const  actorType mobList[] PROGMEM = {
-  {mobNmKnight, {8, 8, 5, 4, 0}, sword, warrior_bmp},
-  {mobNmTank, {10, 4, 7, 2, 2}, sheild, tank_bmp},
-  {mobNmWarlock, {8, 1, 2, 8, 8}, staff, mage_bmp},
-  {mobNmSpider, {5, 7, 4, 8, 1}, empty, spider_bmp},
-  {mobNmOrc, {7, 8, 6, 1, 3}, club, orc_bmp},
-  {mobNmSlime, {28, 8, 10, 6, 8}, empty, slime_bmp},
-  {mobNmTroll, {20, 15, 10, 7, 8}, club, troll_bmp},
-  {mobNmOgre, {20, 20, 15, 5, 0}, empty, ogre_bmp},
-  {mobNmMaster, {20, 15, 15, 10, 10}, empty, arenaMaster_bmp},  
+  {mobNmKnight, {8, 8, 5, 4, 0}, sword, warrior_bmp, {}, {Swipe}},
+  {mobNmTank, {10, 4, 7, 2, 2}, sheild, tank_bmp, {}, {Swipe}},
+  {mobNmWarlock, {8, 1, 2, 8, 8}, staff, mage_bmp, {Fire, Water}, {Swipe}},
+  {mobNmSpider, {5, 7, 4, 8, 1}, empty, spider_bmp, {}, {Swipe}},
+  {mobNmOrc, {7, 8, 6, 1, 3}, club, orc_bmp, {}, {Bash}},
+  {mobNmSlime, {28, 8, 10, 6, 8}, empty, slime_bmp, {}, {Swipe}},
+  {mobNmTroll, {20, 15, 10, 7, 8}, club, troll_bmp, {Fire}, {Bash}},
+  {mobNmOgre, {20, 20, 15, 5, 0}, empty, ogre_bmp, {Fire}, {Bash}},
+  {mobNmMaster, {20, 15, 15, 10, 10}, empty, arenaMaster_bmp, {Cure}, {Swipe}},  
   
 };
 

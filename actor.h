@@ -3,6 +3,8 @@
 
 #include "Globals.h"
 #include "weapons.h"
+#include "images.h"
+#include "attacks.h"
 
 
 
@@ -22,7 +24,8 @@ struct actorType {
   baseStats statSeed;
   weaponId weapon;
   const byte* bmp;
-  
+  const spellNames spellList[4];
+  const attackNames attackList[4];
   
 };
 
@@ -31,9 +34,11 @@ class actor {
   
   public:
   int hp;
+  int mp;
   uint8_t level;
   weaponId weapon;
   const actorType * type;
+
 
 
    actor();

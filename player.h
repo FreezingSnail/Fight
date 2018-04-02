@@ -26,46 +26,19 @@ public:
   
 };
 
+
 const char PROGMEM clssNmWarrior[] = "Warrior";
 const char PROGMEM clssNmMage[] = "Mage";
 const char PROGMEM clssNmTank[] = "Tank";
 
 const  actorType actorList[] PROGMEM = {
-  {clssNmWarrior, { 13, 13, 6, 6, 2 }, sword, warrior_bmp},
-  {clssNmTank, { 20, 5, 10, 2, 3 }, sheild, tank_bmp},
-  {clssNmMage, { 8, 5, 3, 2, 12 }, staff, mage_bmp},
+  {clssNmWarrior, { 13, 13, 6, 6, 2 }, sword, warrior_bmp, {}, {Swipe}},
+  {clssNmTank, { 20, 5, 10, 2, 3 }, sheild, tank_bmp, {}, {Bash}},
+  {clssNmMage, { 8, 5, 3, 2, 12 }, staff, mage_bmp, {Fire, Water, Cure}, {}},
 };
 
-  /*
-   *       case 0:
-      statSeed = { 13, 13, 6, 6, 2 };
-      name = "warrior";
-      hp = getStat(statSeed.totalHP);
-      bmp = warrior_bmp;
-      inv[0] = sword;
-      equiptedWpn = inv[0];
-      break;
-
-      case 1:
-      name = "Tank";
-      bmp = tank_bmp; 
-      statSeed = { 20, 5, 10, 2, 3 };
-      hp = getStat(statSeed.totalHP);
-      inv[0] = sheild;
-      equiptedWpn = inv[0];
-      break;
-
-      case 2:
-      name = "mage";
-      bmp = mage_bmp;
-      statSeed = { 8, 5, 3, 2, 12 };
-      hp = getStat(statSeed.totalHP);
-      inv[0] = staff;
-      equiptedWpn = inv[0];
-      break;
-   */
 
 
 
-#endif // player_h
+#endif  player_h
 

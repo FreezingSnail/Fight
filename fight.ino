@@ -48,7 +48,7 @@ void loop() {
      StatMenu();
      break;
      case GameStatus::store:
-     Store();
+     StoreRoom();
      break;
      case GameStatus::bossBattle:
      bossFight();

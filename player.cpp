@@ -2,13 +2,14 @@
 
 
 playerCharacter::playerCharacter(const actorType & typeActor): actor() {
-  wallet = 5;
+  wallet = 100;
   level = 1;
   potion = 0;
   ex = 0;
   type = &typeActor;
   hp = getStat(pgm_read_word(&type->statSeed.totalHP));
   equiptedWpn = (pgm_read_word(&type->weapon));
+  mp = hp/2;
 
   for (uint8_t x = 0; x < 5; ++x) {
     inv[x] = empty;
