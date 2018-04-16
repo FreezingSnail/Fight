@@ -3,6 +3,7 @@
 #include "actor.h"
 #include "weapons.h"
 #include "images.h"
+#include "attacks.h"
 
 
 
@@ -23,6 +24,7 @@ public:
   void equipt(uint16_t inventoryLocation);
   void checkLvlUp();
   void usePotion();
+  void printMoves();
   
 };
 
@@ -32,9 +34,9 @@ const char PROGMEM clssNmMage[] = "Mage";
 const char PROGMEM clssNmTank[] = "Tank";
 
 const  actorType actorList[] PROGMEM = {
-  {clssNmWarrior, { 13, 13, 6, 6, 2 }, sword, warrior_bmp, {}, {Swipe}},
-  {clssNmTank, { 20, 5, 10, 2, 3 }, sheild, tank_bmp, {}, {Bash}},
-  {clssNmMage, { 8, 5, 3, 2, 12 }, staff, mage_bmp, {Fire, Water, Cure}, {}},
+  {clssNmWarrior, { 13, 13, 6, 6, 2 }, sword, warrior_bmp, {}, {Swipe}, 0, 1},
+  {clssNmTank, { 20, 5, 10, 2, 3 }, sheild, tank_bmp, {}, {Bash}, 0 ,1},
+  {clssNmMage, { 8, 5, 3, 2, 12 }, staff, mage_bmp, {Fire, Water, Cure}, {}, 3, 0},
 };
 
 

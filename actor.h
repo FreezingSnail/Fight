@@ -11,11 +11,11 @@
 
 struct baseStats {
   
-  uint8_t totalHP;
-  uint8_t strength;
-  uint8_t defense;
-  uint8_t speed;
-  uint8_t special;
+  uint16_t totalHP;
+  uint16_t strength;
+  uint16_t defense;
+  uint16_t speed;
+  uint16_t special;
   
 };
 
@@ -24,8 +24,10 @@ struct actorType {
   baseStats statSeed;
   weaponId weapon;
   const byte* bmp;
-  const spellNames spellList[4];
-  const attackNames attackList[4];
+   spellNames spellList[4];
+   spellNames attackList[4];
+   uint16_t spellListLength;
+   uint16_t attackListLength;
   
 };
 
@@ -36,7 +38,7 @@ class actor {
   int hp;
   int mp;
   uint8_t level;
-  weaponId weapon;
+  weaponId equiptedWpn;
   const actorType * type;
 
 
@@ -46,7 +48,7 @@ class actor {
    
    uint16_t damage();
 
-   void takeDamage(actor attacker, uint16_t x);
+   void takeDamage(uint16_t damage, uint16_t modifier);
 
    void takeSpecial(actor attacker);
 

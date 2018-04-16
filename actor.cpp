@@ -5,7 +5,7 @@ actor::actor()  {
   
   hp;
   mp;
-  weapon;
+  equiptedWpn;
   level=1;
   type;
 }
@@ -14,15 +14,15 @@ actor::actor()  {
  
 //return half of strength stat
 uint16_t actor::damage(){
-    return (getStat(pgm_read_word(&type->statSeed.strength)) / 2);
+    return ((getStat(pgm_read_word(&type->statSeed.strength)) / 2)+pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].atkMod));
 }
 
 
 
 //need to fix weapon modifiers
-void actor::takeDamage(actor attacker, uint16_t modifier){
+void actor::takeDamage(uint16_t damage, uint16_t modifier){
   
-     int damageval = ((((attacker.damage())/*+attacker.weapon.atkMod*/) - ((getStat(pgm_read_word(&type->statSeed.defense)))/2)/*-weapon.defMod*/) - modifier);
+     int damageval = (((damage) - ((getStat(pgm_read_word(&type->statSeed.defense)))/2)-pgm_read_word(&weaponArray[static_cast<uint8_t>(equiptedWpn)].defMod)) - modifier);
       if (damageval > 0){
         hp -= damageval;
       }

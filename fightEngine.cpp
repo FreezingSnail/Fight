@@ -10,25 +10,29 @@ bool playerFirst;
 bool turnComplete;
 uint16_t eMoveChoise;
 bool playerTurn;
+spellNames playerAttack;
+spellNames eAttack;
+
+uint16_t eMoveStrength;
 
 
 
 
 //take in 2 entities
 
-void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove){
+void engage(actor& agressor, actor& target, moveType agesMove, moveType trgtMove, int attackmovepower){
 
       if(agesMove == attack){
         if(trgtMove == defend){
-          target.takeDamage(agressor, (target.getStat(pgm_read_word(&target.type->statSeed.defense))));
+          target.takeDamage(agressor.damage(), (target.getStat(pgm_read_word(&target.type->statSeed.defense))));
           
         
         }else if( trgtMove == attack){
-          target.takeDamage(agressor, 0);
+          target.takeDamage(agressor.damage(), 0);
           
         }
         else{ //magic/item use results in more damage taken
-          target.takeDamage(agressor, 0); 
+          target.takeDamage(agressor.damage(), 0); 
               
         }
       }
@@ -56,7 +60,7 @@ if(state == 0){
 //recieve player input
 if(moveChoiseMade == 0){
   
-  getPlayerMove();
+  getPlayerMove(plyr);
 
 // get cpu move
   getCPUMove();
@@ -72,8 +76,8 @@ if(moveChoiseMade == 0){
     //execute commands
 
     if (playerFirst == true && turnComplete == false){
-      engage(plyr, cpu, playerMove, enemyMove);
-      engage(cpu, plyr, enemyMove, playerMove);
+      engage(plyr, cpu, playerMove, enemyMove, pgm_read_word(&spellIndex[static_cast<uint8_t>(playerAttack)].strength));
+      engage(cpu, plyr, enemyMove, playerMove, pgm_read_word(&spellIndex[static_cast<uint8_t>(playerAttack)].strength));
 
     //IMPLEMENT A PAUSE THAT READS ENEMY MOVE SELECTION
       //if (arduboy.everyXFrames(60)){
@@ -86,8 +90,8 @@ if(moveChoiseMade == 0){
     }
     else if (playerFirst == false && turnComplete == false) {
 
-      engage(cpu, plyr, enemyMove, playerMove); 
-      engage(plyr, cpu, playerMove, enemyMove);
+      engage(cpu, plyr, enemyMove, playerMove, pgm_read_word(&spellIndex[static_cast<uint8_t>(playerAttack)].strength)); 
+      engage(plyr, cpu, playerMove, enemyMove, pgm_read_word(&spellIndex[static_cast<uint8_t>(playerAttack)].strength));
       abuff = 1;
       turnComplete = true;
       moveChoiseMade = 0;
@@ -135,8 +139,8 @@ else if(state == 1){
 
 
 
-void getPlayerMove(){
-    
+void getPlayerMove(playerCharacter & plyr){
+    if(menuNum ==0){
     turnComplete = false;
     if (menuCase > 3){ menuCase = 0;}
     if (menuCase < 0){menuCase = 3;} 
@@ -162,10 +166,10 @@ void getPlayerMove(){
    if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
       abuff = 1;
       switch (menuCase) {
-
+      
       case 0:
       playerMove = attack;
-      moveChoiseMade = 1;
+      menuNum = 1;
       break;
       case 1:
       playerMove = defend;
@@ -173,16 +177,45 @@ void getPlayerMove(){
       break;
       case 2:
       playerMove = magic;
-      moveChoiseMade = 1;
+      menuNum =2;
       break;
       case 3:
       playerMove = item;
-      moveChoiseMade = 1;
-      
+      moveChoiseMade = 1;  
       break;
     }
    }
-    
+    }
+    else if(menuNum == 1){
+     if (menuCase > pgm_read_word(plyr.type->attackListLength)){ menuCase = 0;}
+    if (menuCase < 0){menuCase = pgm_read_word(plyr.type->attackListLength);} 
+      arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(plyr.type->attackList[menuCase])].name))); 
+//    arduboy.println(FlashString(pgm_read_word(&attackIndex[static_cast<uint8_t>(plyr.type->attackList[menuCase])].name)));  
+
+       if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
+        abuff = 1;
+        moveChoiseMade = 1;  
+        menuNum = 0;
+        playerAttack = pgm_read_word(plyr.type->attackList[menuCase]);
+       }
+       if( arduboy.justPressed(B_BUTTON) == true){
+        menuNum = 0;  
+       }
+       
+    }
+    else if(menuNum == 2){
+      if (menuCase > pgm_read_word(plyr.type->spellListLength)){ menuCase = 0;}
+      if (menuCase < 0){menuCase = pgm_read_word(plyr.type->spellListLength);} 
+      arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(plyr.type->spellList[menuCase])].name)));  
+       if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
+        abuff = 1;
+        moveChoiseMade = 1;  
+        menuNum = 0;
+       }
+       if( arduboy.justPressed(B_BUTTON) == true){
+        menuNum = 0;  
+       }
+    }
 }
 
 void getCPUMove(){
@@ -206,4 +239,12 @@ void getCPUMove(){
 }
 
 
-void selectAttack
+void Attackpower(playerCharacter & plyr){   
+    arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(plyr.type->attackList[menuCase])].name)));  
+    if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
+      abuff = 1;
+      moveChoiseMade = 1;  
+    }
+}
+  
+   

@@ -52,6 +52,8 @@ const weapon weaponArray[] PROGMEM = {
  // {4, 2, 0, WpnNmclub, 10},
     };
 
+
+//@pharap recommended
 constexpr inline const __FlashStringHelper * FlashString(const char * flashString)
 {
   return reinterpret_cast<const __FlashStringHelper*>(flashString);

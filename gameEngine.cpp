@@ -3,7 +3,7 @@
 
 //INITIALIZE ACTORS
 playerCharacter player = playerCharacter(actorList[0]);
-enemy mob = enemy(1, {"name", {8, 8, 5, 4, 0}, sword, slime_bmp, {}, {Swipe}});
+enemy mob = enemy(1, {"name", {8, 8, 5, 4, 0}, sword, slime_bmp, {}, {Swipe}, 0, 1});
 
 //STORE INVENTORY ARRA
 const weaponId storeInventory[] = { kleaver,
@@ -96,10 +96,14 @@ void gameStart(){
 //INTRO SCREEN
 void  Intro(){
   arduboy.clear();
+  spellNames fr = Swipe;
+  arduboy.print(static_cast<uint8_t>(pgm_read_word(player.type->attackList[0])));
+  //arduboy.print(menuCase);
+
   arduboy.drawBitmap(0, 0, splashScreen, 128, 64, WHITE);
   //ADD GAME SPLASH SCREEN
   arduboy.setCursor(25, 0);
-  arduboy.print(F("Hit b to start"));
+ // arduboy.print(F("Hit b to start"));
   //ADD HELP SCREEN
   if (arduboy.justPressed(B_BUTTON)){
     gameStatus = charSelect;
@@ -272,10 +276,12 @@ void  StatMenu() {
     if(equiptMenu == 0){
       player.printStats();
 
-    if(arduboy.pressed(RIGHT_BUTTON)) {
+    if(arduboy.justPressed(RIGHT_BUTTON)) {
       equiptMenu =1;
-      menuCase =0;
     }
+      if(arduboy.justPressed(LEFT_BUTTON)) {
+        equiptMenu =2;
+      }
   }
 
   if (equiptMenu == 1){
@@ -290,16 +296,26 @@ void  StatMenu() {
       if (menuCase < 0){menuCase = 4;} 
       arduboy.print(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(player.inv[menuCase])].name)));
       
-      if( arduboy.pressed(A_BUTTON) == true and abuff ==0){
+      if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
           player.equipt(menuCase);
           equiptMenu = 0;
 
       }    
     
-      if(arduboy.pressed(LEFT_BUTTON)) {
+      if(arduboy.justPressed(LEFT_BUTTON)) {
         equiptMenu =0;
+        menuCase =0;
       }
   }
+
+  else if (equiptMenu == 2){
+    arduboy.setCursor(0, 12);
+    player.printMoves();
+     if(arduboy.justPressed(RIGHT_BUTTON)) {
+      equiptMenu =0;
+    }
+  }
+  
 }
 
 //END SCREEN PAUSE ActorNm FIGHTS

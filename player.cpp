@@ -75,7 +75,7 @@ void playerCharacter::equipt(uint16_t inventoryLocation){
 
 void playerCharacter::printInv(){
   //pgm_read_word(&weaponArray[static_cast<uint8_t>(storeInventory[0])].cost);
-     for( uint16_t x = 0; x < 5 ; x++){
+     for( uint8_t x = 0; x < 5 ; x++){
         arduboy.print(FlashString(pgm_read_word(&weaponArray[static_cast<uint8_t>(inv[x])].name)));
         arduboy.print(F(" a:"));
         arduboy.print(pgm_read_word(&weaponArray[static_cast<uint8_t>(inv[x])].atkMod));
@@ -87,6 +87,16 @@ void playerCharacter::printInv(){
 }
 
 
+
+void playerCharacter::printMoves(){
+  
+  for( uint8_t x = 0; x < (pgm_read_word(&type->attackListLength)); x++){
+    arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(type->attackList[x])].name)));  
+  }
+  for( uint8_t x = 0; x < (pgm_read_word(&type->spellListLength)); x++){
+    arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(type->spellList[x])].name)));
+}
+}
 //exp to level up
 //3*(B1^2)
 
