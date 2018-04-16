@@ -96,14 +96,10 @@ void gameStart(){
 //INTRO SCREEN
 void  Intro(){
   arduboy.clear();
-  spellNames fr = Swipe;
-  arduboy.print(static_cast<uint8_t>(pgm_read_word(player.type->attackList[0])));
-  //arduboy.print(menuCase);
-
   arduboy.drawBitmap(0, 0, splashScreen, 128, 64, WHITE);
   //ADD GAME SPLASH SCREEN
   arduboy.setCursor(25, 0);
- // arduboy.print(F("Hit b to start"));
+  arduboy.print(F("Hit b to start"));
   //ADD HELP SCREEN
   if (arduboy.justPressed(B_BUTTON)){
     gameStatus = charSelect;

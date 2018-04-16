@@ -91,10 +91,10 @@ void playerCharacter::printInv(){
 void playerCharacter::printMoves(){
   
   for( uint8_t x = 0; x < (pgm_read_word(&type->attackListLength)); x++){
-    arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(type->attackList[x])].name)));  
+    arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(pgm_read_byte(&type->attackList[x]))].name)));  
   }
   for( uint8_t x = 0; x < (pgm_read_word(&type->spellListLength)); x++){
-    arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(type->spellList[x])].name)));
+    arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(pgm_read_byte(&type->spellList[x]))].name)));
 }
 }
 //exp to level up

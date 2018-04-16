@@ -189,7 +189,7 @@ void getPlayerMove(playerCharacter & plyr){
     else if(menuNum == 1){
      if (menuCase > pgm_read_word(plyr.type->attackListLength)){ menuCase = 0;}
     if (menuCase < 0){menuCase = pgm_read_word(plyr.type->attackListLength);} 
-      arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(plyr.type->attackList[menuCase])].name))); 
+      arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(pgm_read_byte(&plyr.type->attackList[menuCase]))].name))); 
 //    arduboy.println(FlashString(pgm_read_word(&attackIndex[static_cast<uint8_t>(plyr.type->attackList[menuCase])].name)));  
 
        if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
@@ -206,7 +206,7 @@ void getPlayerMove(playerCharacter & plyr){
     else if(menuNum == 2){
       if (menuCase > pgm_read_word(plyr.type->spellListLength)){ menuCase = 0;}
       if (menuCase < 0){menuCase = pgm_read_word(plyr.type->spellListLength);} 
-      arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(plyr.type->spellList[menuCase])].name)));  
+      arduboy.println(FlashString(pgm_read_word(&spellIndex[static_cast<uint8_t>(pgm_read_byte(&plyr.type->spellList[menuCase]))].name)));  
        if( arduboy.justPressed(A_BUTTON) == true and abuff ==0){
         abuff = 1;
         moveChoiseMade = 1;  
